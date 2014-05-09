@@ -37,11 +37,13 @@ var uiMenu;
 //socket
 var socket;
 
+var canvas;
+
 function initGame(){
     //resize canvas
-    var canvas = document.getElementById("gameStage");
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
+ canvas = document.getElementById("gameStage");
+   // canvas.width  = window.innerWidth;
+   // canvas.height = window.innerHeight;
 
     //stage
     stage = new createjs.Stage("gameStage");
@@ -79,40 +81,58 @@ function initGame(){
     stage.addChild(mainPlayer);
     
     //position
-    mainPlayer.x = 512/2;
-    mainPlayer.y = 250;
+    mainPlayer.x = 500;
+    mainPlayer.y = 500;
+
     
     //animation
     mainPlayer.gotoAndPlay("down_idle");
 
     //ui
-    uiMenu = new createjs.Bitmap("iventory.png");
-    uiMenu.x = 0;
-    uiMenu.y = 450;
-    stage.addChild(uiMenu);
+    //uiMenu = new createjs.Bitmap("iventory.png");
+    //uiMenu.x = 0;
+    //uiMenu.y = 450;
+    //stage.addChild(uiMenu);
     
     //add ui event
-    initUIEvents();
+    //initUIEvents();
     
     //init enemies
-    initEnemy();
+    //initEnemy();
     
     //init socket
     initSocket();
 
     //sound
-    createjs.Sound.alternateExtensions = ["mp3"];
-    createjs.Sound.registerSound("M-GameBG.ogg","background");   
+    //createjs.Sound.alternateExtensions = ["mp3"];
+    createjs.Sound.registerSound("bgm.mp3","background");   
     createjs.Sound.addEventListener("fileload", loadSoundHandler);
     
     //register key functions
     document.onkeydown = handleKeyDown;
     document.onkeyup = handleKeyUp;
     
+    updateCamera();
     //ticker
     createjs.Ticker.addEventListener("tick", handleTick);
     createjs.Ticker.setFPS(60);       
 }   
+
+function updateCamera()
+{
+    stage.x = -mainPlayer.x + canvas.width/2;
+    stage.y = -mainPlayer.y + canvas.height/2;
+    var bgWidth = sceneBackground.image.width;
+    var bgHeight =  sceneBackground.image.height;
+
+    if(stage.x>0)stage.x = 0;
+    if(stage.y>0)stage.y = 0;
+    if(stage.x<-(bgWidth-canvas.width))stage.x = -(bgWidth-canvas.width);
+    if(stage.y<-(bgHeight-canvas.height))stage. y= -(bgHeight-canvas.height);
+
+
+
+}
 
 //init enemy
 function initEnemy(){
@@ -214,13 +234,14 @@ function handleTick() {
 
             needSync = true;
         } 
-        else mainPlayer.gotoAndPlay("down_idle");
+        else mainPlayer.stop();
     }
 
     //send to server
     if(needSync) sendPlayerStateToServer();
 
     //update
+    updateCamera();
     stage.update(); 
 }     
 
