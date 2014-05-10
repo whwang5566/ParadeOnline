@@ -12,6 +12,12 @@ var KEYCODE_RIGHT = 39;		//usefull keycode
 var KEYCODE_DOWN = 40;		//usefull keycode
 var KEYCODE_SPACE = 32;		//usefull keycode
 
+//Predefined Variable
+var DialogPaddingX = 10;
+var DialogPaddingY = 10;
+var DialogRoundSize = 10;
+  var TextOffestY = 30;
+
 //player spritesheet
 var playerSpriteSheet;
 
@@ -38,6 +44,9 @@ var uiMenu;
 var socket;
 
 var canvas;
+
+var PlayerContainer;
+var DialogContainer;
 
 function initGame(){
     //resize canvas
@@ -88,6 +97,35 @@ function initGame(){
     //animation
     mainPlayer.gotoAndPlay("down_idle");
 
+
+
+
+
+  var dialogText = new createjs.Text("Hello World", "20px Arial", "#ff7700");
+  dialogText.text = "Hello World" ;
+  dialogText.textAlign = "center";
+  dialogText.textBaseline = "bottom";
+  dialogText.text = "test" ;
+  dialogText.color = "#FFFFFF";
+
+
+ //console.log(dialogText.getBounds());
+  var TextBackground  = new createjs.Shape();
+
+
+
+
+
+  mainPlayer.dialog={};
+  mainPlayer.dialog.background = TextBackground;
+  mainPlayer.dialog.text = dialogText;
+
+  updateTargetPlayerDialog(mainPlayer);
+
+  //mainPlayer.dialog.background =  dialog;
+  stage.addChild(TextBackground);
+  stage.addChild(dialogText);
+
     //ui
     //uiMenu = new createjs.Bitmap("iventory.png");
     //uiMenu.x = 0;
@@ -118,6 +156,37 @@ function initGame(){
     createjs.Ticker.setFPS(60);       
 }   
 
+function updateDialog()
+{
+
+
+
+}
+
+function updateTargetPlayerDialog(target)
+{
+  var dialogText = target.dialog.text;
+  var TextBackground = target.dialog.background;
+
+  dialogText.x = target.x ;
+  dialogText.y = target.y - TextOffestY;
+
+  var textWidth = dialogText.getBounds().width;
+  var textHeight = dialogText.getBounds().height;
+
+  if(dialogText.text == " ")
+  {
+    TextBackground.graphics.clear();
+  }
+  else
+  {
+    TextBackground.graphics.clear().beginFill("black").drawRoundRect(target.x-textWidth/2-DialogPaddingX/2 ,target.y-TextOffestY-textHeight-DialogPaddingX/2,textWidth+DialogPaddingX,textHeight+DialogPaddingY,DialogRoundSize);
+  }
+
+  TextBackground.alpha = 0.6;
+
+}
+
 function updateCamera()
 {
     stage.x = -mainPlayer.x + canvas.width/2;
@@ -129,9 +198,6 @@ function updateCamera()
     if(stage.y>0)stage.y = 0;
     if(stage.x<-(bgWidth-canvas.width))stage.x = -(bgWidth-canvas.width);
     if(stage.y<-(bgHeight-canvas.height))stage. y= -(bgHeight-canvas.height);
-
-
-
 }
 
 //init enemy
@@ -242,12 +308,13 @@ function handleTick() {
 
     //update
     updateCamera();
+    updateTargetPlayerDialog(mainPlayer);
     stage.update(); 
 }     
 
 function loadSoundHandler(event){
-    var backgroundSound = createjs.Sound.play("background",{loop:true});
-    backgroundSound.volume = 1;
+    //var backgroundSound = createjs.Sound.play("background",{loop:true});
+   // backgroundSound.volume = 1;
 }
 
 function handleKeyDown(event){
@@ -325,6 +392,8 @@ function updatePlayer(id,stateData){
     if(!player){
         addNewPlayer(id,stateData.x,stateData.y);
         player = playersList[id];
+
+        updateTargetPlayerDialog(player);
     }
 
     if(stateData)
@@ -332,6 +401,8 @@ function updatePlayer(id,stateData){
        player.x = stateData.x;
        player.y = stateData.y;
        if(player.currentAnimation != stateData.animation) player.gotoAndPlay(stateData.animation);
+
+       updateTargetPlayerDialog(player);
     }
 }
 
