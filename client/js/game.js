@@ -68,6 +68,8 @@ var dialogText;
 var PlayerContainer;
 var DialogContainer;
 var UIContainer;
+var DialogDistance = 20;
+var police;
 
 function initGame(){
     //resize canvas
@@ -109,7 +111,7 @@ function initGame(){
     initPlayerSpriteSheet();
    
 
-    var police = new createjs.Sprite(policeSpriteSheet);
+    police = new createjs.Sprite(policeSpriteSheet);
     police.x = 650;
     police.y = 570;
     police.scaleX = 1;
@@ -193,6 +195,7 @@ var fang;
 var TopDialogBackground;
 var TopDialogText;
 
+
 function switchDialog()
 {
     if(!showDialog)
@@ -205,7 +208,6 @@ function switchDialog()
     {
        createjs.Tween.get(fang,{loop:false}).to({alpha:0},300,createjs.Ease.quadInOut);
        createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
-
        createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
     }
 
@@ -738,6 +740,20 @@ function handleTick() {
     //send to server
     if(needSync) sendPlayerStateToServer();
 
+ var distance =getDistance(police,mainPlayer);
+
+   if(distance<DialogDistance&&!showDialog)
+   {
+        switchDialog();
+   }
+   else if(distance>=DialogDistance&&showDialog)
+   {
+        switchDialog();
+   }
+
+   //console.log(distance);
+   // if(getDistance())
+
     //update
     updateCamera();
     updateTargetPlayerDialog(mainPlayer);
@@ -756,12 +772,12 @@ function handleKeyDown(event){
             return;
         }
     switch(event.keyCode){
-
+/*
         case KEYCODE_X:
 
             switchDialog();
        
-            break;
+            break;*/
 
         case KEYCODE_UP:
             moveUp = true
@@ -978,7 +994,20 @@ function sendPlayerInstructionToServer(instruction){
 }
 
 
+function getDistance(object1,object2)
+{
+    var distX = object1.x - object2.x;
+    var distY = object1.y - object2.y;
 
+    var distX2 = distX*distX;
+    var distY2 = distY*distY;
+
+    var dist2 = distX2+distY2;
+
+    var result = Math.sqrt(dist2);
+
+    return result;
+}
 
 //change player sprite
 function changePlayer(player,playerSpriteId,isMainPlayer,id){
