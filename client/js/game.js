@@ -62,6 +62,9 @@ function initGame(){
 
  
     mainPlayer.dialog.text.text = dialogTextInput.val()+" ";
+
+    sendDialogToServer(dialogTextInput.val()+" ");
+
     dialogTextInput.val("");
 
     updateTargetPlayerDialog(mainPlayer);
@@ -113,47 +116,8 @@ function initGame(){
     mainPlayer.gotoAndPlay("down_idle");
 
 
+    initDialog(mainPlayer);
 
-
-
-  var dialogText = new createjs.Text("Hello World", "20px Arial", "#ff7700");
-  dialogText.text = "Hello World" ;
-  dialogText.textAlign = "center";
-  dialogText.textBaseline = "bottom";
-  dialogText.text = " " ;
-  dialogText.color = "#FFFFFF";
-
-
- //console.log(dialogText.getBounds());
-  var TextBackground  = new createjs.Shape();
-
-
-
-
-
-  mainPlayer.dialog={};
-  mainPlayer.dialog.background = TextBackground;
-  mainPlayer.dialog.text = dialogText;
-
-  updateTargetPlayerDialog(mainPlayer);
-
-  //mainPlayer.dialog.background =  dialog;
-  stage.addChild(TextBackground);
-  stage.addChild(dialogText);
-
-    //ui
-    //uiMenu = new createjs.Bitmap("iventory.png");
-    //uiMenu.x = 0;
-    //uiMenu.y = 450;
-    //stage.addChild(uiMenu);
-    
-    //add ui event
-    //initUIEvents();
-    
-    //init enemies
-    //initEnemy();
-    
-    //init socket
     initSocket();
 
     //sound
@@ -171,12 +135,29 @@ function initGame(){
     createjs.Ticker.setFPS(60);       
 }   
 
-function updateDialog()
+function initDialog(player)
 {
+  var dialogText = new createjs.Text("Hello World", "20px Arial", "#ff7700");
+  dialogText.textAlign = "center";
+  dialogText.textBaseline = "bottom";
+  dialogText.text = " " ;
+  dialogText.color = "#FFFFFF";
 
 
+ //console.log(dialogText.getBounds());
+  var TextBackground  = new createjs.Shape();
 
+  player.dialog={};
+  player.dialog.background = TextBackground;
+  player.dialog.text = dialogText;
+
+  updateTargetPlayerDialog(player);
+
+  //mainPlayer.dialog.background =  dialog;
+  stage.addChild(TextBackground);
+  stage.addChild(dialogText);
 }
+
 
 function updateTargetPlayerDialog(target)
 {
@@ -373,6 +354,8 @@ function addNewPlayer(id,x,y){
 
     stage.addChild(player);
     
+
+    initDialog(player);
     //position
     player.x = x;
     player.y = y;
@@ -396,6 +379,8 @@ function removePlayer(id){
         delete playersList[id];
     }
 }
+
+
 
 //update player state
 function updatePlayer(id,stateData){
@@ -451,6 +436,29 @@ function initSocket(){
         updatePlayer(data.id,data.state)
     });
 
+    socket.on('otherClientDialogChange',function(data){
+        //console.log(data);
+        otherPlayerSay(data.id,data.state);
+    });
+
+
+
+}
+
+function otherPlayerSay(id,dialogData)
+{
+    var player = playersList[id];
+    player.dialog.text.text = dialogData;
+    updateTargetPlayerDialog(player);
+
+    if(socket) socket.emit('clientDialogChange', playerData);
+
+
+}
+
+function sendDialogToServer(dialogData)
+{
+    if(socket) socket.emit('clientDialogChange', dialogData);
 }
 
 //send to server
