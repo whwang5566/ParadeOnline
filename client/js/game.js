@@ -11,6 +11,7 @@ var KEYCODE_LEFT = 37;		//usefull keycode
 var KEYCODE_RIGHT = 39;		//usefull keycode
 var KEYCODE_DOWN = 40;		//usefull keycode
 var KEYCODE_SPACE = 32;		//usefull keycode
+var KEYCODE_X = 88;
 
 //Predefined Variable
 var DialogPaddingX = 10;
@@ -45,6 +46,8 @@ var moveUp = false;
 var moveDown = false;
 var isMove = false;
 var defaultPlayerSprite = 1;
+
+
 
 //npc
 var npcList = [];
@@ -148,15 +151,34 @@ function initGame(){
 
 
 
-    var fang = new createjs.Bitmap("fang.png"); 
-    fang.scaleX=0.5;
-    fang.scaleY=0.5;
-    fang.x = 0;
-    fang.y = 100;
+  fang = new createjs.Bitmap("fang.png"); 
+  fang.scaleX=0.5;
+  fang.scaleY=0.5;
+  fang.x = 0;
+  fang.y = 100;
+  fang.alpha = 0;
 
+  TopDialogBackground  = new createjs.Shape();
+  TopDialogBackground.color = "#FFFFFF";
+  TopDialogBackground.alpha = 0.7;
+  TopDialogBackground.graphics.clear().beginFill("black").drawRoundRect(10,210,380,80,10);
+  TopDialogBackground.alpha = 0;
+
+
+  TopDialogText = new createjs.Text("Hello World", "20px Arial", "#ff7700");
+  TopDialogText.textAlign = "left";
+  TopDialogText.textBaseline = "top";
+  TopDialogText.text = "我是超越憲法的男人。" ;
+  TopDialogText.color = "#FFFFFF";
+  TopDialogText.x = 130;
+  TopDialogText.y = 220;
+  TopDialogText.alpha = 0;
 
    
-    UIContainer.addChild(fang);
+    
+   UIContainer.addChild(TopDialogBackground);
+   UIContainer.addChild(TopDialogText);
+   UIContainer.addChild(fang);
 
 
     
@@ -165,6 +187,30 @@ function initGame(){
     createjs.Ticker.addEventListener("tick", handleTick);
     createjs.Ticker.setFPS(60);       
 }   
+
+var showDialog = false;
+var fang;
+var TopDialogBackground;
+var TopDialogText;
+
+function switchDialog()
+{
+    if(showDialog)
+    {
+        createjs.Tween.get(fang,{loop:false}).to({alpha:1},300,createjs.Ease.quadInOut);
+        createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
+        createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
+    }
+    else
+    {
+       createjs.Tween.get(fang,{loop:false}).to({alpha:0},300,createjs.Ease.quadInOut);
+       createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
+
+       createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
+    }
+
+    showDialog = !showDialog;
+}
 
 
 function initPlayerSpriteSheet()
@@ -439,6 +485,7 @@ function initPlayerSpriteSheet()
 }
 
 
+
  
 function initDialog(player)
 {
@@ -461,6 +508,10 @@ function initDialog(player)
   //mainPlayer.dialog.background =  dialog;
   DialogContainer.addChild(TextBackground);
   DialogContainer.addChild(dialogText);
+
+
+
+  
 }
 
 
@@ -692,6 +743,11 @@ function loadSoundHandler(event){
 
 function handleKeyDown(event){
     switch(event.keyCode){
+
+        case KEYCODE_X:
+            switchDialog();
+            break;
+
         case KEYCODE_UP:
             moveUp = true
             break;
