@@ -12,6 +12,12 @@ var KEYCODE_RIGHT = 39;		//usefull keycode
 var KEYCODE_DOWN = 40;		//usefull keycode
 var KEYCODE_SPACE = 32;		//usefull keycode
 
+//Predefined Variable
+var DialogPaddingX = 10;
+var DialogPaddingY = 10;
+var DialogRoundSize = 10;
+  var TextOffestY = 30;
+
 //player spritesheet
 var player1SpriteSheet;
 var player2SpriteSheet;
@@ -46,12 +52,33 @@ var uiMenu;
 var socket;
 
 var canvas;
+var dialogButton;
+var dialogText;
+
+var PlayerContainer;
+var DialogContainer;
 
 function initGame(){
     //resize canvas
  canvas = document.getElementById("gameStage");
-   // canvas.width  = window.innerWidth;
-   // canvas.height = window.innerHeight;
+ dialogButton = $("#dialogButton");
+ dialogTextInput = $("#dialogContent");
+
+ dialogButton.click(function()
+ {
+    console.log("test");
+
+ 
+    mainPlayer.dialog.text.text = dialogTextInput.val()+" ";
+
+    sendDialogToServer(dialogTextInput.val()+" ");
+
+    dialogTextInput.val("");
+
+    updateTargetPlayerDialog(mainPlayer);
+
+ });
+
 
     //stage
     stage = new createjs.Stage("gameStage");
@@ -251,19 +278,9 @@ function initGame(){
     //animation
     mainPlayer.gotoAndPlay("down_idle");
 
-    //ui
-    //uiMenu = new createjs.Bitmap("iventory.png");
-    //uiMenu.x = 0;
-    //uiMenu.y = 450;
-    //stage.addChild(uiMenu);
-    
-    //add ui event
-    //initUIEvents();
-    
-    //init enemies
-    //initEnemy();
-    
-    //init socket
+
+    initDialog(mainPlayer);
+
     initSocket();
 
     //sound
@@ -281,6 +298,54 @@ function initGame(){
     createjs.Ticker.setFPS(60);       
 }   
 
+function initDialog(player)
+{
+  var dialogText = new createjs.Text("Hello World", "20px Arial", "#ff7700");
+  dialogText.textAlign = "center";
+  dialogText.textBaseline = "bottom";
+  dialogText.text = " " ;
+  dialogText.color = "#FFFFFF";
+
+
+ //console.log(dialogText.getBounds());
+  var TextBackground  = new createjs.Shape();
+
+  player.dialog={};
+  player.dialog.background = TextBackground;
+  player.dialog.text = dialogText;
+
+  updateTargetPlayerDialog(player);
+
+  //mainPlayer.dialog.background =  dialog;
+  stage.addChild(TextBackground);
+  stage.addChild(dialogText);
+}
+
+
+function updateTargetPlayerDialog(target)
+{
+  var dialogText = target.dialog.text;
+  var TextBackground = target.dialog.background;
+
+  dialogText.x = target.x ;
+  dialogText.y = target.y - TextOffestY;
+
+  var textWidth = dialogText.getBounds().width;
+  var textHeight = dialogText.getBounds().height;
+
+  if(dialogText.text == " ")
+  {
+    TextBackground.graphics.clear();
+  }
+  else
+  {
+    TextBackground.graphics.clear().beginFill("black").drawRoundRect(target.x-textWidth/2-DialogPaddingX/2 ,target.y-TextOffestY-textHeight-DialogPaddingX/2,textWidth+DialogPaddingX,textHeight+DialogPaddingY,DialogRoundSize);
+  }
+
+  TextBackground.alpha = 0.6;
+
+}
+
 function updateCamera()
 {
     stage.x = -mainPlayer.x + canvas.width/2;
@@ -292,9 +357,6 @@ function updateCamera()
     if(stage.y>0)stage.y = 0;
     if(stage.x<-(bgWidth-canvas.width))stage.x = -(bgWidth-canvas.width);
     if(stage.y<-(bgHeight-canvas.height))stage. y= -(bgHeight-canvas.height);
-
-
-
 }
 
 //init enemy
@@ -430,12 +492,13 @@ function handleTick() {
 
     //update
     updateCamera();
+    updateTargetPlayerDialog(mainPlayer);
     stage.update(); 
 }     
 
 function loadSoundHandler(event){
-    // var backgroundSound = createjs.Sound.play("background",{loop:true});
-    // backgroundSound.volume = 1;
+    var backgroundSound = createjs.Sound.play("background",{loop:true});
+    backgroundSound.volume = 1;
 }
 
 function handleKeyDown(event){
@@ -481,6 +544,8 @@ function addNewPlayer(id,x,y){
 
     stage.addChild(player);
     
+
+    initDialog(player);
     //position
     player.x = x;
     player.y = y;
@@ -505,6 +570,8 @@ function removePlayer(id){
     }
 }
 
+
+
 //update player state
 function updatePlayer(id,stateData){
 
@@ -515,6 +582,8 @@ function updatePlayer(id,stateData){
     if(!player){
         addNewPlayer(id,stateData.x,stateData.y);
         player = playersList[id];
+
+        updateTargetPlayerDialog(player);
     }
 
     if(stateData)
@@ -526,6 +595,9 @@ function updatePlayer(id,stateData){
 
        //import! need update
         stage.update();
+
+        updateTargetPlayerDialog(player);
+
     }
 }
 
@@ -561,6 +633,29 @@ function initSocket(){
         updatePlayer(data.id,data.state)
     });
 
+    socket.on('otherClientDialogChange',function(data){
+        //console.log(data);
+        otherPlayerSay(data.id,data.state);
+    });
+
+
+
+}
+
+function otherPlayerSay(id,dialogData)
+{
+    var player = playersList[id];
+    player.dialog.text.text = dialogData;
+    updateTargetPlayerDialog(player);
+
+    if(socket) socket.emit('clientDialogChange', playerData);
+
+
+}
+
+function sendDialogToServer(dialogData)
+{
+    if(socket) socket.emit('clientDialogChange', dialogData);
 }
 
 //send to server
@@ -620,6 +715,7 @@ function changePlayer(player,playerSpriteId,isMainPlayer,id){
     //save position
     var tempX = player.x;
     var tempY = player.y;
+    var tempDialog = player.dialog;
 
     //remove player
     stage.removeChild(player);
@@ -627,6 +723,7 @@ function changePlayer(player,playerSpriteId,isMainPlayer,id){
     //add player
     player = new createjs.Sprite(newSprite);
     player.playerSprite = parseInt(playerSpriteId);
+    player.dialog = tempDialog;
 
     //animation
     //player.gotoAndPlay("down_idle");

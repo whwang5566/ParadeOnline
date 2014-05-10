@@ -33,6 +33,12 @@ io.sockets.on('connection', function (socket) {
   		socket.broadcast.emit('otherClientStateChange', { id:socket.id,state:data });
   	});
 
+    socket.on('clientDialogChange',function(data)
+    {
+       socket.broadcast.emit('otherClientDialogChange', { id:socket.id,state:data });
+
+    });
+
   	//disconnect
   	socket.on('disconnect',function(){
   		console.log(socket.id+' disconnect!');

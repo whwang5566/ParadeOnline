@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CCSP test</title>
+    <!-- Bootstrap -->
+    <link href="../bootstrap-3.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <meta charset="UTF-8">
     <title>CCSP Test</title>
     <script type="text/javascript" src="http://code.createjs.com/createjs-2013.12.12.min.js"></script>
@@ -13,23 +20,40 @@
         }
     </style>
 </head>
-<body onload="initGame();">
+    
+    <body onload="initGame();">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../bootstrap-3.1.1/dist/js/bootstrap.min.js"></script>
 
-   <h1> 遊行Online</h1>
-    <canvas id="gameStage" width="800" height="600"></canvas>
-    <form>
-    <input type="text" name="firstname"><input type="submit" value="說話">
-    <select name="playerSelection" onchange="changePlayer(mainPlayer,this.options[this.selectedIndex].value,true)">
-        <option value="1">Player 1</option>
-        <option value="2">Player 2</option>
-        <option value="3">Player 3</option>
-        <option value="4">Player 4</option>
-        <option value="5">Player 5</option>
-        <option value="6">Player 6</option>
-        <option value="7">Player 7</option>
-        <option value="8">Player 8</option>
-    </select>
-</form>
+    <div>
+    <div align="center"><font size="6"><big><big><big><big>遊行 Online</big></big></big></big></font></div>
+    <!-- <h1 align="center" >遊行 Online</h1> -->
+    <div class="col-ms-6">
+        <canvas id="gameStage" width="400" height="300" class="center-block img-rounded"></canvas>
+    </div>
+    <p></p>
+    
+        <div class="form-group col-sm-offset-3 col-sm-5 ">
+          <input type="text" class="form-control" id="dialogContent" placeholder="">
+
+        </div>
+        <button id="dialogButton" type="submit" class="btn btn-default">說話</button>
+        
+        <select name="playerSelection" onchange="changePlayer(mainPlayer,this.options[this.selectedIndex].value,true)">
+            <option value="1">Player 1</option>
+            <option value="2">Player 2</option>
+            <option value="3">Player 3</option>
+            <option value="4">Player 4</option>
+            <option value="5">Player 5</option>
+            <option value="6">Player 6</option>
+            <option value="7">Player 7</option>
+            <option value="8">Player 8</option>
+        </select>
+        <!-- <div class="col-sm-3"></div> -->
+    </div>
 </body>
 
 </html>
+
