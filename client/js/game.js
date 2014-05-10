@@ -152,7 +152,7 @@ function initGame(){
     fang.scaleX=0.5;
     fang.scaleY=0.5;
     fang.x = 0;
-    fang.y = 0;
+    fang.y = 100;
 
 
    
