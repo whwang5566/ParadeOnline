@@ -6,11 +6,12 @@ var sceneBackground;
 var moveSpeed = 3;
 
 //keyboard key
-var KEYCODE_UP = 38;		//usefull keycode
-var KEYCODE_LEFT = 37;		//usefull keycode
-var KEYCODE_RIGHT = 39;		//usefull keycode
-var KEYCODE_DOWN = 40;		//usefull keycode
-var KEYCODE_SPACE = 32;		//usefull keycode
+var KEYCODE_UP = 38;        //usefull keycode
+var KEYCODE_LEFT = 37;      //usefull keycode
+var KEYCODE_RIGHT = 39;     //usefull keycode
+var KEYCODE_DOWN = 40;      //usefull keycode
+var KEYCODE_SPACE = 32;     //usefull keycode
+var KEYCODE_X = 88;
 
 //Predefined Variable
 var DialogPaddingX = 10;
@@ -46,6 +47,8 @@ var moveDown = false;
 var isMove = false;
 var defaultPlayerSprite = 1;
 
+
+
 //npc
 var npcList = [];
 
@@ -65,6 +68,8 @@ var dialogText;
 var PlayerContainer;
 var DialogContainer;
 var UIContainer;
+var DialogDistance = 20;
+var police;
 
 function initGame(){
     //resize canvas
@@ -106,11 +111,11 @@ function initGame(){
     initPlayerSpriteSheet();
    
 
-    var police = new createjs.Sprite(policeSpriteSheet);
+    police = new createjs.Sprite(policeSpriteSheet);
     police.x = 650;
     police.y = 570;
-    police.scaleX = 1.5;
-    police.scaleY = 1.5;
+    police.scaleX = 1;
+    police.scaleY = 1;
     police.gotoAndPlay("down_idle");
     PlayerContainer.addChild(police);
 
@@ -151,15 +156,34 @@ function initGame(){
 
 
 
-    var fang = new createjs.Bitmap("fang.png"); 
-    fang.scaleX=0.5;
-    fang.scaleY=0.5;
-    fang.x = 0;
-    fang.y = 100;
+  fang = new createjs.Bitmap("fang.png"); 
+  fang.scaleX=0.5;
+  fang.scaleY=0.5;
+  fang.x = 0;
+  fang.y = 100;
+  fang.alpha = 0;
 
+  TopDialogBackground  = new createjs.Shape();
+  TopDialogBackground.color = "#FFFFFF";
+  TopDialogBackground.alpha = 0.7;
+  TopDialogBackground.graphics.clear().beginFill("black").drawRoundRect(10,210,380,80,10);
+  TopDialogBackground.alpha = 0;
+
+
+  TopDialogText = new createjs.Text("Hello World", "20px Arial", "#ff7700");
+  TopDialogText.textAlign = "left";
+  TopDialogText.textBaseline = "top";
+  TopDialogText.text = "我是超越憲法的男人。" ;
+  TopDialogText.color = "#FFFFFF";
+  TopDialogText.x = 130;
+  TopDialogText.y = 220;
+  TopDialogText.alpha = 0;
 
    
-    UIContainer.addChild(fang);
+    
+   UIContainer.addChild(TopDialogBackground);
+   UIContainer.addChild(TopDialogText);
+   UIContainer.addChild(fang);
 
 
     
@@ -169,28 +193,52 @@ function initGame(){
     createjs.Ticker.setFPS(60);       
 }   
 
+var showDialog = false;
+var fang;
+var TopDialogBackground;
+var TopDialogText;
+
+
+function switchDialog()
+{
+    if(!showDialog)
+    {
+        createjs.Tween.get(fang,{loop:false}).to({alpha:1},300,createjs.Ease.quadInOut);
+        createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
+        createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
+    }
+    else
+    {
+       createjs.Tween.get(fang,{loop:false}).to({alpha:0},300,createjs.Ease.quadInOut);
+       createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
+       createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
+    }
+
+    showDialog = !showDialog;
+}
+
 
 function initPlayerSpriteSheet()
 {
 
     policeSpriteSheet = new createjs.SpriteSheet({
         "animations":{
-            "down_walk": {"frames":[6,7,8,7],"speed":0.1},
-            "left_walk": {"frames":[9,10,11,10],"speed":0.1},
-            "right_walk": {"frames":[3,4,5,4],"speed":0.1},
-            "up_walk":{"frames":[0,1,2,1],"speed":0.1},
-            "down_idle":7,
-            "left_idle":10,
-            "right_idle":4,
-            "up_idle":1
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
             },
-            "images": ["police.png"],
+            "images": ["policeA.png"],
             "frames":
                 {
-                    "height": 30.5,
-                    "width":21.3,
-                    "regX": 10.5,
-                    "regY": 15.25,
+                    "height": 32,
+                    "width":30,
+                    "regX": 15,
+                    "regY": 16,
                     "count": 12
                 }
     }); 
@@ -442,6 +490,7 @@ function initPlayerSpriteSheet()
 }
 
 
+
  
 function initDialog(player)
 {
@@ -464,6 +513,10 @@ function initDialog(player)
   //mainPlayer.dialog.background =  dialog;
   DialogContainer.addChild(TextBackground);
   DialogContainer.addChild(dialogText);
+
+
+
+  
 }
 
 
@@ -538,7 +591,7 @@ function initNPC(){
     catNpc.y = 150;
     //catNpc.scaleX = 0.5;
     //catNpc.scaleY = 0.5;
-    stage.addChild(catNpc);
+    PlayerContainer.addChild(catNpc);
     //animation
     //createjs.Tween.get(catNpc,{loop:true}).to({y:enemy.y+20},700,createjs.Ease.quadInOut).to({y:enemy.y}, 700, createjs.Ease.quadInOut);
 
@@ -690,19 +743,47 @@ function handleTick() {
     //send to server
     if(needSync) sendPlayerStateToServer();
 
+ var distance =getDistance(police,mainPlayer);
+
+   if(distance<DialogDistance&&!showDialog)
+   {
+        switchDialog();
+   }
+   else if(distance>=DialogDistance&&showDialog)
+   {
+        switchDialog();
+   }
+
+   //console.log(distance);
+   // if(getDistance())
+
     //update
     updateCamera();
     updateTargetPlayerDialog(mainPlayer);
     stage.update(); 
 }     
 
+var backgroundSound;
+
 function loadSoundHandler(event){
-    var backgroundSound = createjs.Sound.play("background",{loop:true});
+    backgroundSound = createjs.Sound.play("background",{loop:true});
     backgroundSound.volume = 1;
 }
 
 function handleKeyDown(event){
+
+     if(dialogTextInput.is(":focus"))
+        {
+            return;
+        }
     switch(event.keyCode){
+/*
+        case KEYCODE_X:
+
+            switchDialog();
+       
+            break;*/
+
         case KEYCODE_UP:
             moveUp = true
             break;
@@ -915,6 +996,22 @@ function sendPlayerInstructionToServer(instruction){
     };
 
     if(socket) socket.emit('clientSendInstruction', playerData);
+}
+
+
+function getDistance(object1,object2)
+{
+    var distX = object1.x - object2.x;
+    var distY = object1.y - object2.y;
+
+    var distX2 = distX*distX;
+    var distY2 = distY*distY;
+
+    var dist2 = distX2+distY2;
+
+    var result = Math.sqrt(dist2);
+
+    return result;
 }
 
 //change player sprite
