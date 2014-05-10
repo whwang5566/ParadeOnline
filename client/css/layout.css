@@ -16,3 +16,28 @@ body {
 	margin-left:-150px;
 }
 
+.Mute {
+	position: relative;
+	/*left: 100px;*/
+	top: -285px;
+	left: 180px;
+	text-align: center;
+	color:#00ff00;
+}
+
+.ChangeCharacter{
+	position: relative;
+	top: -310px;
+	left: 210px;
+
+}
+
+.GameScreenLayout{
+	position: relative;
+	top: 10px;
+}
+
+.ChatBoxLayout{
+	position: relative;
+	top: -30px;
+}

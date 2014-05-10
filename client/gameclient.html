@@ -4,15 +4,16 @@
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>遊行 Online</title>
     <!-- Bootstrap -->
     <link href="../bootstrap-3.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="layout.css" rel="stylesheet">
 
     <meta charset="UTF-8">
     <title>CCSP Test</title>
     <script type="text/javascript" src="http://code.createjs.com/createjs-2013.12.12.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="game.js"></script>
+    <script type="text/javascript" src="layout.js"></script>
     <style>
         /*Disable Scroll*/
         body{
@@ -28,34 +29,62 @@
     <script src="../bootstrap-3.1.1/dist/js/bootstrap.min.js"></script>
 
     <div>
-    <div align="center"><font size="6"><big><big><big><big>遊行 Online</big></big></big></big></font></div>
+    <!-- <div align="center"><font size="6"><big><big><big><big>遊行 Online</big></big></big></big></font></div> -->
+    <p></p>
+    <img src="Online.png" width="45%" height="45%" class="center-block">
+    <p></p>
     <!-- <h1 align="center" >遊行 Online</h1> -->
     <div class="col-ms-6">
-        <canvas id="gameStage" width="400" height="300" class="center-block img-rounded"></canvas>
+        <canvas id="gameStage" width="400" height="300" class="center-block img-rounded GameScreenLayout"></canvas>
     </div>
-    <p></p>
+    <div class="Mute">
+         <!-- width="50%" height="50%" -->
+        <!-- hi -->
+        <button type="button" onclick="clickMute();"  style="border:1px ; solid:#666666; 
+ background-color: transparent"><img src="unmute.png" id="mutePhoto" width="20" height="20"></button>
+    </div>
     
+     <select name="playerSelection" onchange="changePlayer(mainPlayer,this.options[this.selectedIndex].value,true)" class="ChangeCharacter">
+            <option value="1">Player 1</option>
+            <option value="2">Player 2</option>
+            <option value="3">Player 3</option>
+            <option value="4">孫悟空</option>
+            <option value="5">Player 5</option>
+            <option value="6">Player 6</option>
+            <option value="7">Player 7</option>
+            <option value="8">Player 8</option>
+        </select>
+    
+    <!-- <div class="btn-group ChangeCharacter" name="playerSelection" onchange="changePlayer(mainPlayer,this.options[this.selectedIndex].value,true)">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" onclick="clickChangeCharacter();">
+      Player 1
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="#">Player 2</a></li>
+      <li><a href="#">Player 3</a></li>
+      <li><a href="#">Player 4</a></li>
+      <li><a href="#">Player 5</a></li>
+      <li><a href="#">Player 6</a></li>
+      <li><a href="#">Player 7</a></li>
+      <li><a href="#">Player 8</a></li>
+    </ul>
+    </div> -->
+
+    <p></p>
+        <div class="ChatBoxLayout">
         <div class="form-group col-sm-offset-3 col-sm-5 ">
           <input type="text" class="form-control" id="dialogContent" placeholder="">
 
         </div>
         <button id="dialogButton" type="submit" class="btn btn-default">說話</button>
+        </div>
         
-        <select name="playerSelection" onchange="changePlayer(mainPlayer,this.options[this.selectedIndex].value,true)">
-            <option value="1">Player 1</option>
-            <option value="2">Player 2</option>
-            <option value="3">Player 3</option>
-            <option value="4">Player 4</option>
-            <option value="5">Player 5</option>
-            <option value="6">Player 6</option>
-            <option value="7">Player 7</option>
-            <option value="8">Player 8</option>
-            <option value="9">Player 9</option>
-            <option value="10">Player 10</option>
-            <option value="11">Player 11</option>
-        </select>
+       
         <!-- <div class="col-sm-3"></div> -->
-    </div>
+        hi
+   
+  </div>
 </body>
 
 </html>

@@ -8,6 +8,7 @@ var port = 5566;
 //static files
 app.use(express.static(__dirname+"/client/js"));
 app.use(express.static(__dirname+"/client/assets"));
+app.use(express.static(__dirname+"/client/css"));
 
 //server
 server.listen(port);
@@ -32,11 +33,6 @@ io.sockets.on('connection', function (socket) {
   		//broadcast(except current socket) to update players states
   		socket.broadcast.emit('otherClientStateChange', { id:socket.id,state:data });
   	});
-
-    socket.on('clientSendInstruction', function (data) {
-      //broadcast(except current socket) to update players instruction
-      socket.broadcast.emit('otherClientSendInstruction', { id:socket.id,state:data });
-    });
 
     socket.on('clientDialogChange',function(data)
     {
