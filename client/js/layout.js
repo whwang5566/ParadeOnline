@@ -3,10 +3,10 @@
 
 function clickMute(){
 
-    // console.log("hihi");
+    console.log("hihi");
     if ($("#mutePhoto").attr("src")==="mute.png")
     {
-        // console.log("mute");
+        console.log("mute");
         $( "#mutePhoto" ).attr( "src", "unmute.png" );
         backgroundSound.setMute(false);
     }
