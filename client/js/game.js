@@ -760,8 +760,10 @@ function handleTick() {
     stage.update(); 
 }     
 
+var backgroundSound;
+
 function loadSoundHandler(event){
-    var backgroundSound = createjs.Sound.play("background",{loop:true});
+    backgroundSound = createjs.Sound.play("background",{loop:true});
     backgroundSound.volume = 1;
 }
 
