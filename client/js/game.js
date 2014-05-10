@@ -27,6 +27,7 @@ var player5SpriteSheet;
 var player6SpriteSheet;
 var player7SpriteSheet;
 var player8SpriteSheet;
+var policeSpriteSheet;
 
 //players
 var playersList = [];
@@ -57,6 +58,7 @@ var dialogText;
 
 var PlayerContainer;
 var DialogContainer;
+var UIContainer;
 
 function initGame(){
     //resize canvas
@@ -82,32 +84,128 @@ function initGame(){
 
     //stage
     stage = new createjs.Stage("gameStage");
+    PlayerContainer= new createjs.Container(); 
+    DialogContainer= new createjs.Container(); 
+    UIContainer = new createjs.Container(); 
     
     //background
     sceneBackground = new createjs.Bitmap("map.png"); 
+
     stage.addChild(sceneBackground);
+    stage.addChild(PlayerContainer);
+    stage.addChild(DialogContainer);
+    stage.addChild(UIContainer);
+
     
-    //players
+    initPlayerSpriteSheet();
+   
+
+    var police = new createjs.Sprite(policeSpriteSheet);
+    police.x = 650;
+    police.y = 570;
+    police.scaleX = 1.5;
+    police.scaleY = 1.5;
+    police.gotoAndPlay("down_idle");
+    PlayerContainer.addChild(police);
+
+
+
+    //add player
+    mainPlayer = new createjs.Sprite(player1SpriteSheet);
+    mainPlayer.playerSprite = defaultPlayerSprite;
+
+    PlayerContainer.addChild(mainPlayer);
+    
+    //position
+    mainPlayer.x = 500;
+    mainPlayer.y = 500;
+
+    
+    //animation
+    mainPlayer.gotoAndPlay("down_idle");
+
+
+    initDialog(mainPlayer);
+
+    initSocket();
+
+    //sound
+    //createjs.Sound.alternateExtensions = ["mp3"];
+    createjs.Sound.registerSound("bgm.mp3","background");   
+    createjs.Sound.addEventListener("fileload", loadSoundHandler);
+    
+    //register key functions
+    document.onkeydown = handleKeyDown;
+    document.onkeyup = handleKeyUp;
+
+
+
+
+    var fang = new createjs.Bitmap("fang.png"); 
+    fang.scaleX=0.5;
+    fang.scaleY=0.5;
+    fang.x = 0;
+    fang.y = 0;
+
+
+   
+    UIContainer.addChild(fang);
+
+
+    
+    updateCamera();
+    //ticker
+    createjs.Ticker.addEventListener("tick", handleTick);
+    createjs.Ticker.setFPS(60);       
+}   
+
+
+function initPlayerSpriteSheet()
+{
+
+    policeSpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "left_walk": {"frames":[9,10,11,10],"speed":0.1},
+            "right_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "up_walk":{"frames":[0,1,2,1],"speed":0.1},
+            "down_idle":7,
+            "left_idle":10,
+            "right_idle":4,
+            "up_idle":1
+            },
+            "images": ["police.png"],
+            "frames":
+                {
+                    "height": 30.5,
+                    "width":21.3,
+                    "regX": 10.5,
+                    "regY": 15.25,
+                    "count": 12
+                }
+    }); 
+
+     //players
     player1SpriteSheet = new createjs.SpriteSheet({
         "animations":{
-			"down_walk": {"frames":[0,1,2,1],"speed":0.1},
-			"left_walk": {"frames":[3,4,5,4],"speed":0.1},
-			"right_walk": {"frames":[6,7,8,7],"speed":0.1},
-			"up_walk":{"frames":[9,10,11,10],"speed":0.1},
-			"down_idle":1,
-			"left_idle":4,
-			"right_idle":7,
-			"up_idle":10
-			},
-			"images": ["player1.png"],
-			"frames":
-				{
-					"height": 32,
-					"width":30,
-					"regX": 16,
-					"regY": 15,
-					"count": 12
-				}
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["player1.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":30,
+                    "regX": 16,
+                    "regY": 15,
+                    "count": 12
+                }
     });
 
     player2SpriteSheet = new createjs.SpriteSheet({
@@ -263,40 +361,7 @@ function initGame(){
                     "count": 12
                 }
     });
-
-    //add player
-    mainPlayer = new createjs.Sprite(player1SpriteSheet);
-    mainPlayer.playerSprite = defaultPlayerSprite;
-
-    stage.addChild(mainPlayer);
-    
-    //position
-    mainPlayer.x = 500;
-    mainPlayer.y = 500;
-
-    
-    //animation
-    mainPlayer.gotoAndPlay("down_idle");
-
-
-    initDialog(mainPlayer);
-
-    initSocket();
-
-    //sound
-    //createjs.Sound.alternateExtensions = ["mp3"];
-    createjs.Sound.registerSound("bgm.mp3","background");   
-    createjs.Sound.addEventListener("fileload", loadSoundHandler);
-    
-    //register key functions
-    document.onkeydown = handleKeyDown;
-    document.onkeyup = handleKeyUp;
-    
-    updateCamera();
-    //ticker
-    createjs.Ticker.addEventListener("tick", handleTick);
-    createjs.Ticker.setFPS(60);       
-}   
+}
 
 function initDialog(player)
 {
@@ -317,8 +382,8 @@ function initDialog(player)
   updateTargetPlayerDialog(player);
 
   //mainPlayer.dialog.background =  dialog;
-  stage.addChild(TextBackground);
-  stage.addChild(dialogText);
+  DialogContainer.addChild(TextBackground);
+  DialogContainer.addChild(dialogText);
 }
 
 
@@ -357,6 +422,9 @@ function updateCamera()
     if(stage.y>0)stage.y = 0;
     if(stage.x<-(bgWidth-canvas.width))stage.x = -(bgWidth-canvas.width);
     if(stage.y<-(bgHeight-canvas.height))stage. y= -(bgHeight-canvas.height);
+
+    UIContainer.x = - stage.x;
+    UIContainer.y = - stage.y;
 }
 
 //init enemy
@@ -542,7 +610,7 @@ function addNewPlayer(id,x,y){
     var player = new createjs.Sprite(player1SpriteSheet);
     player.playerSprite = defaultPlayerSprite;
 
-    stage.addChild(player);
+    PlayerContainer.addChild(player);
     
 
     initDialog(player);
@@ -565,7 +633,7 @@ function removePlayer(id){
 
     if(player)
     {
-        stage.removeChild(player);
+        PlayerContainer.removeChild(player);
         delete playersList[id];
     }
 }
@@ -718,7 +786,7 @@ function changePlayer(player,playerSpriteId,isMainPlayer,id){
     var tempDialog = player.dialog;
 
     //remove player
-    stage.removeChild(player);
+    PlayerContainer.removeChild(player);
 
     //add player
     player = new createjs.Sprite(newSprite);
@@ -728,7 +796,7 @@ function changePlayer(player,playerSpriteId,isMainPlayer,id){
     //animation
     //player.gotoAndPlay("down_idle");
 
-    stage.addChild(player);
+    PlayerContainer.addChild(player);
     
     //position
     player.x = tempX;
