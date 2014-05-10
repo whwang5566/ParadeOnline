@@ -2,6 +2,12 @@ body {
 	background-color: #EEE;
 }
 
+#wrapper{
+	width:800px;
+	height:600px;
+	
+}
+
 .BOX {
 	width: 300px;
 	height: 300px;
