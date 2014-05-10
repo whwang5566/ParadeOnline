@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CCSP test</title>
+    <!-- Bootstrap -->
+    <link href="../bootstrap-3.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <meta charset="UTF-8">
     <title>CCSP Test</title>
     <script type="text/javascript" src="http://code.createjs.com/createjs-2013.12.12.min.js"></script>
@@ -13,13 +20,28 @@
         }
     </style>
 </head>
-<body onload="initGame();">
+    
+    <body onload="initGame();">
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../bootstrap-3.1.1/dist/js/bootstrap.min.js"></script>
 
    <h1> 遊行Online</h1>
-    <canvas id="gameStage" width="800" height="600"></canvas>
+    <div class="col-ms-6">
+        <canvas id="gameStage" width="400" height="300"></canvas>
+    </div>
+    <!-- <form class="form-inline" role="form"> -->
     <form>
-<input type="text" name="firstname"><input type="submit" value="說話">
-</form>
+        <!-- <input type="text" name="firstname"><input type="submit" value="說話"> -->
+        <div class="form-group col-sm-5">
+          <input type="text" class="form-control" id="gameStage" placeholder="">
+        </div>
+        <button type="submit" class="btn btn-default">說話</button>
+    
+    </form>
+
 </body>
 
 </html>
+
