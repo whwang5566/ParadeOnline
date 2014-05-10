@@ -19,6 +19,14 @@ function clickMute(){
     
 }
 
+function IgnoreAlpha(e)
+{
+
+        e.returnValue=false;
+        e.cancel = true;
+    
+}
+
 function clickChangeCharacter(){
     console.log("hihi");
 }
