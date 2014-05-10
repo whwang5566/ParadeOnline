@@ -40,6 +40,11 @@ io.sockets.on('connection', function (socket) {
 
     });
 
+    socket.on('clientSendInstruction', function (data) {
+      //broadcast(except current socket) to update players instruction
+      socket.broadcast.emit('otherClientSendInstruction', { id:socket.id,state:data });
+    });
+
   	//disconnect
   	socket.on('disconnect',function(){
   		console.log(socket.id+' disconnect!');

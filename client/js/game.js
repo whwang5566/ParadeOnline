@@ -977,6 +977,9 @@ function sendPlayerInstructionToServer(instruction){
     if(socket) socket.emit('clientSendInstruction', playerData);
 }
 
+
+
+
 //change player sprite
 function changePlayer(player,playerSpriteId,isMainPlayer,id){
     //console.log('id:'+playerSpriteId);
