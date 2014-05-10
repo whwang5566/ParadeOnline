@@ -112,8 +112,8 @@ function initGame(){
     var police = new createjs.Sprite(policeSpriteSheet);
     police.x = 650;
     police.y = 570;
-    police.scaleX = 1.5;
-    police.scaleY = 1.5;
+    police.scaleX = 1;
+    police.scaleY = 1;
     police.gotoAndPlay("down_idle");
     PlayerContainer.addChild(police);
 
@@ -195,7 +195,7 @@ var TopDialogText;
 
 function switchDialog()
 {
-    if(showDialog)
+    if(!showDialog)
     {
         createjs.Tween.get(fang,{loop:false}).to({alpha:1},300,createjs.Ease.quadInOut);
         createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
@@ -218,22 +218,22 @@ function initPlayerSpriteSheet()
 
     policeSpriteSheet = new createjs.SpriteSheet({
         "animations":{
-            "down_walk": {"frames":[6,7,8,7],"speed":0.1},
-            "left_walk": {"frames":[9,10,11,10],"speed":0.1},
-            "right_walk": {"frames":[3,4,5,4],"speed":0.1},
-            "up_walk":{"frames":[0,1,2,1],"speed":0.1},
-            "down_idle":7,
-            "left_idle":10,
-            "right_idle":4,
-            "up_idle":1
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
             },
-            "images": ["police.png"],
+            "images": ["policeA.png"],
             "frames":
                 {
-                    "height": 30.5,
-                    "width":21.3,
-                    "regX": 10.5,
-                    "regY": 15.25,
+                    "height": 32,
+                    "width":30,
+                    "regX": 15,
+                    "regY": 16,
                     "count": 12
                 }
     }); 
@@ -750,10 +750,17 @@ function loadSoundHandler(event){
 }
 
 function handleKeyDown(event){
+
+     if(dialogTextInput.is(":focus"))
+        {
+            return;
+        }
     switch(event.keyCode){
 
         case KEYCODE_X:
+
             switchDialog();
+       
             break;
 
         case KEYCODE_UP:
