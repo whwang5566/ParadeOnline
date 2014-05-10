@@ -78,20 +78,14 @@ function initGame(){
  dialogButton = $("#dialogButton");
  dialogTextInput = $("#dialogContent");
 
- dialogButton.click(function()
- {
-    //console.log("test");
+ dialogTextInput.keyup(function(e){
+    if(e.keyCode == 13)
+    {
+     userSayEvent();
+    }
+});
 
- 
-    mainPlayer.dialog.text.text = dialogTextInput.val()+" ";
-
-    sendDialogToServer(dialogTextInput.val()+" ");
-
-    dialogTextInput.val("");
-
-    updateTargetPlayerDialog(mainPlayer);
-
- });
+ dialogButton.click(userSayEvent);
 
 
     //stage
@@ -199,6 +193,18 @@ var fang;
 var TopDialogBackground;
 var TopDialogText;
 
+
+function userSayEvent()
+{
+
+    mainPlayer.dialog.text.text = dialogTextInput.val()+" ";
+
+    sendDialogToServer(dialogTextInput.val()+" ");
+
+    dialogTextInput.val("");
+
+    updateTargetPlayerDialog(mainPlayer);
+}
 
 function switchDialog()
 {
