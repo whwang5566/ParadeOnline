@@ -45,7 +45,7 @@
  background-color: transparent"><img src="unmute.png" id="mutePhoto" width="20" height="20"></button>
     </div>
     
-     <select name="playerSelection" onchange="changePlayer(mainPlayer,this.options[this.selectedIndex].value,true)" class="ChangeCharacter">
+     <select name="playerSelection" onchange="changePlayer(mainPlayer,this.options[this.selectedIndex].value,true)" class="ChangeCharacter" onkeydown="IgnoreAlpha(event);">
             <option value="1">路人甲</option>
             <option value="2">克勞得</option>
             <option value="3">惡魔</option>
