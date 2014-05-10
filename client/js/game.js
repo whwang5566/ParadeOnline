@@ -347,7 +347,7 @@ function initGame(){
     
     //animation
     mainPlayer.gotoAndPlay("down_idle");
-
+    mainPlayer.moveDirection = 'down';
 
     initDialog(mainPlayer);
 
@@ -471,8 +471,8 @@ function initNPC(){
 }
 
 //add shoes 
-function addItemShoes(){
-    //enemy
+function addItemShoes(player){
+    //shoes
     var shoesSpriteSheet = new createjs.SpriteSheet(
         {
             frames:{
@@ -483,16 +483,43 @@ function addItemShoes(){
         }
     );
     
-    //add enemy
+    //add shoes
     var shoesItem = new createjs.Sprite(shoesSpriteSheet);
-    shoesItem.x = 200;
-    shoesItem.y = 150;
-    shoesItem.scaleX = 0.5;
-    shoesItem.scaleY = 0.5;
+    shoesItem.x = player.x;
+    shoesItem.y = player.y;
+    shoesItem.scaleX = 0.08;
+    shoesItem.scaleY = 0.08;
     stage.addChild(shoesItem);
     
-    //animation
-    createjs.Tween.get(shoesItem,{loop:true}).to({y:shoesItem.y+20},700,createjs.Ease.quadInOut).to({y:shoesItem.y}, 700, createjs.Ease.quadInOut);
+    //throw animation
+    var throwX = shoesItem.x;
+    var throwY = shoesItem.y;
+    //check direction
+    //console.log('move Direction:'+player.moveDirection);
+    switch(player.moveDirection){
+        case 'up':
+            throwY -= 40;
+            break;
+        case 'down':
+            throwY += 40;
+            break;
+        case 'right':
+            throwX += 30;
+            throwY -= 10;
+            break;
+        case 'left':
+            throwX -= 30;
+            throwY -= 10;
+            break;
+        default:
+            throwX += 30;
+            throwY -= 10;
+            break;
+    }
+
+    //tween
+    createjs.Tween.get(shoesItem,{loop:false}).to({x:throwX,y:throwY,rotation:360},500,createjs.Ease.quadInOut).call(function(){stage.removeChild(this);});
+
 }
 
 //add event
@@ -530,18 +557,22 @@ function handleTick() {
     if(moveUp === true){
         if(mainPlayer.currentAnimation != "up_walk") mainPlayer.gotoAndPlay("up_walk");
         mainPlayer.y -= moveSpeed;
+        mainPlayer.moveDirection = 'up';
     }
     else if(moveDown === true){
         if(mainPlayer.currentAnimation != "down_walk") mainPlayer.gotoAndPlay("down_walk");
         mainPlayer.y += moveSpeed;
+        mainPlayer.moveDirection = 'down';
     }
     else if(moveLeft === true){
         if(mainPlayer.currentAnimation != "left_walk") mainPlayer.gotoAndPlay("left_walk");
         mainPlayer.x -= moveSpeed;
+        mainPlayer.moveDirection = 'left';
     }
     else if(moveRight === true){
         if(mainPlayer.currentAnimation != "right_walk") mainPlayer.gotoAndPlay("right_walk");
         mainPlayer.x += moveSpeed;
+        mainPlayer.moveDirection = 'right';
     }
     
     //set idel animation
@@ -600,6 +631,9 @@ function handleKeyDown(event){
             break;
         case KEYCODE_RIGHT:
             moveRight = true;
+            break;
+        case KEYCODE_SPACE:
+            addItemShoes(mainPlayer);
             break;
     }
 }
