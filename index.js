@@ -33,6 +33,11 @@ io.sockets.on('connection', function (socket) {
   		socket.broadcast.emit('otherClientStateChange', { id:socket.id,state:data });
   	});
 
+    socket.on('clientSendInstruction', function (data) {
+      //broadcast(except current socket) to update players instruction
+      socket.broadcast.emit('otherClientSendInstruction', { id:socket.id,state:data });
+    });
+
     socket.on('clientDialogChange',function(data)
     {
        socket.broadcast.emit('otherClientDialogChange', { id:socket.id,state:data });
