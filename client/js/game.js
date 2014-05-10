@@ -13,7 +13,14 @@ var KEYCODE_DOWN = 40;		//usefull keycode
 var KEYCODE_SPACE = 32;		//usefull keycode
 
 //player spritesheet
-var playerSpriteSheet;
+var player1SpriteSheet;
+var player2SpriteSheet;
+var player3SpriteSheet;
+var player4SpriteSheet;
+var player5SpriteSheet;
+var player6SpriteSheet;
+var player7SpriteSheet;
+var player8SpriteSheet;
 
 //players
 var playersList = [];
@@ -24,6 +31,7 @@ var moveRight = false;
 var moveUp = false;
 var moveDown = false;
 var isMove = false;
+var defaultPlayerSprite = 1;
 
 //enemy
 var enemy;
@@ -52,8 +60,8 @@ function initGame(){
     sceneBackground = new createjs.Bitmap("map.png"); 
     stage.addChild(sceneBackground);
     
-    //player
-    playerSpriteSheet = new createjs.SpriteSheet({
+    //players
+    player1SpriteSheet = new createjs.SpriteSheet({
         "animations":{
 			"down_walk": {"frames":[0,1,2,1],"speed":0.1},
 			"left_walk": {"frames":[3,4,5,4],"speed":0.1},
@@ -64,7 +72,7 @@ function initGame(){
 			"right_idle":7,
 			"up_idle":10
 			},
-			"images": ["player.png"],
+			"images": ["player1.png"],
 			"frames":
 				{
 					"height": 32,
@@ -74,10 +82,165 @@ function initGame(){
 					"count": 12
 				}
     });
+
+    player2SpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["player2.png"],
+            "frames":
+                {
+                    "height": 48,
+                    "width":32,
+                    "regX": 16,
+                    "regY": 24,
+                    "count": 12
+                }
+    });
+
+    player3SpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["player3.png"],
+            "frames":
+                {
+                    "height": 65,
+                    "width":65,
+                    "regX": 32.5,
+                    "regY": 32.5,
+                    "count": 12
+                }
+    });
+
+    player4SpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["player4.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":32,
+                    "regX": 16,
+                    "regY": 16,
+                    "count": 12
+                }
+    });
+
+    player5SpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,3,1],"speed":0.1},
+            "left_walk": {"frames":[4,5,6,7,4],"speed":0.1},
+            "right_walk": {"frames":[8,9,10,11,8],"speed":0.1},
+            "up_walk":{"frames":[12,13,14,15,12],"speed":0.1},
+            "down_idle":1,
+            "left_idle":5,
+            "right_idle":9,
+            "up_idle":13
+            },
+            "images": ["player5.png"],
+            "frames":
+                {
+                    "height": 40,
+                    "width":33,
+                    "regX": 16.5,
+                    "regY": 20,
+                    "count": 16
+                }
+    });
+
+    player6SpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["player6.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":32,
+                    "regX": 16,
+                    "regY": 16,
+                    "count": 12
+                }
+    });
+
+    player7SpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["player7.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":32,
+                    "regX": 16,
+                    "regY": 16,
+                    "count": 12
+                }
+    });
     
+    player8SpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["player8.png"],
+            "frames":
+                {
+                    "height": 80,
+                    "width":80,
+                    "regX": 40,
+                    "regY": 40,
+                    "count": 12
+                }
+    });
+
     //add player
-    mainPlayer = new createjs.Sprite(playerSpriteSheet);
-    
+    mainPlayer = new createjs.Sprite(player1SpriteSheet);
+    mainPlayer.playerSprite = defaultPlayerSprite;
+
     stage.addChild(mainPlayer);
     
     //position
@@ -157,6 +320,31 @@ function initEnemy(){
     
     //animation
     createjs.Tween.get(enemy,{loop:true}).to({y:enemy.y+20},700,createjs.Ease.quadInOut).to({y:enemy.y}, 700, createjs.Ease.quadInOut);
+}
+
+//add shoes 
+function addItemShoes(){
+    //enemy
+    var shoesSpriteSheet = new createjs.SpriteSheet(
+        {
+            frames:{
+                regX:128, regY:128,
+                count:1,
+                width:256, height:256
+            }, images:["shoe.png"]
+        }
+    );
+    
+    //add enemy
+    var shoesItem = new createjs.Sprite(shoesSpriteSheet);
+    shoesItem.x = 200;
+    shoesItem.y = 150;
+    shoesItem.scaleX = 0.5;
+    shoesItem.scaleY = 0.5;
+    stage.addChild(shoesItem);
+    
+    //animation
+    createjs.Tween.get(shoesItem,{loop:true}).to({y:shoesItem.y+20},700,createjs.Ease.quadInOut).to({y:shoesItem.y}, 700, createjs.Ease.quadInOut);
 }
 
 //add event
@@ -246,8 +434,8 @@ function handleTick() {
 }     
 
 function loadSoundHandler(event){
-    var backgroundSound = createjs.Sound.play("background",{loop:true});
-    backgroundSound.volume = 1;
+    // var backgroundSound = createjs.Sound.play("background",{loop:true});
+    // backgroundSound.volume = 1;
 }
 
 function handleKeyDown(event){
@@ -286,8 +474,10 @@ function handleKeyUp(event){
 
 //add new player
 function addNewPlayer(id,x,y){
+
     //create new player
-    var player = new createjs.Sprite(playerSpriteSheet);
+    var player = new createjs.Sprite(player1SpriteSheet);
+    player.playerSprite = defaultPlayerSprite;
 
     stage.addChild(player);
     
@@ -331,7 +521,11 @@ function updatePlayer(id,stateData){
     {
        player.x = stateData.x;
        player.y = stateData.y;
+       changePlayer(player,stateData.playerSprite,false,id);
        if(player.currentAnimation != stateData.animation) player.gotoAndPlay(stateData.animation);
+
+       //import! need update
+        stage.update();
     }
 }
 
@@ -349,7 +543,9 @@ function initSocket(){
     socket.on('newClientConnect',function(data){
         console.log(data);
         //add new player
-        addNewPlayer(data.id,512/2,250);
+        addNewPlayer(data.id,500,500);
+        //send self player data to new client
+        sendPlayerStateToServer();
     });
 
     //other player connect
@@ -372,11 +568,91 @@ function sendPlayerStateToServer(){
     var playerData = {
         x : mainPlayer.x,
         y : mainPlayer.y,
+        playerSprite : mainPlayer.playerSprite,
         animation : mainPlayer.currentAnimation
     };
 
     if(socket) socket.emit('clientStateChange', playerData);
 }
 
+//change player sprite
+function changePlayer(player,playerSpriteId,isMainPlayer,id){
+    //console.log('id:'+playerSpriteId);
+    
+    var newSprite;
 
+    //parse int
+    playerSpriteId = parseInt(playerSpriteId);
+
+    //check already or not
+    if(player.playerSprite == parseInt(playerSpriteId)) return;
+    
+    switch(playerSpriteId){
+        case 1:
+            newSprite = player1SpriteSheet;
+            break;
+        case 2:
+            newSprite = player2SpriteSheet;
+            break;
+        case 3:
+            newSprite = player3SpriteSheet;
+            break;
+        case 4:
+            newSprite = player4SpriteSheet;
+            break;
+        case 5:
+            newSprite = player5SpriteSheet;
+            break;
+        case 6:
+            newSprite = player6SpriteSheet;
+            break;
+        case 7:
+            newSprite = player7SpriteSheet;
+            break;
+        case 8:
+            newSprite = player8SpriteSheet;
+            break;
+        default:
+            newSprite = player1SpriteSheet;
+            break;
+    }
+
+    //save position
+    var tempX = player.x;
+    var tempY = player.y;
+
+    //remove player
+    stage.removeChild(player);
+
+    //add player
+    player = new createjs.Sprite(newSprite);
+    player.playerSprite = parseInt(playerSpriteId);
+
+    //animation
+    //player.gotoAndPlay("down_idle");
+
+    stage.addChild(player);
+    
+    //position
+    player.x = tempX;
+    player.y = tempY;
+
+    if(isMainPlayer == true)
+    {
+        player.gotoAndPlay("down_idle");
+        mainPlayer = player;
+
+        //send data
+        sendPlayerStateToServer();
+    } 
+    //set player
+    if(id != undefined ) 
+    {
+        console.log('spriteId:'+playerSpriteId +' id:'+id);
+        playersList[id] = player;
+    }
+
+    //update
+    stage.update(); 
+}
 
