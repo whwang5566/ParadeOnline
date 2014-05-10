@@ -16,7 +16,7 @@ var KEYCODE_SPACE = 32;		//usefull keycode
 var DialogPaddingX = 10;
 var DialogPaddingY = 10;
 var DialogRoundSize = 10;
-  var TextOffestY = 30;
+var TextOffestY = 30;
 
 //player spritesheet
 var player1SpriteSheet;
@@ -27,6 +27,9 @@ var player5SpriteSheet;
 var player6SpriteSheet;
 var player7SpriteSheet;
 var player8SpriteSheet;
+var player9SpriteSheet;
+var player10SpriteSheet;
+var player11SpriteSheet;
 
 //players
 var playersList = [];
@@ -39,8 +42,8 @@ var moveDown = false;
 var isMove = false;
 var defaultPlayerSprite = 1;
 
-//enemy
-var enemy;
+//npc
+var npcList = [];
 
 //sound
 var backgroundSound;
@@ -264,6 +267,73 @@ function initGame(){
                 }
     });
 
+    player9SpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["player9.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":32,
+                    "regX": 16,
+                    "regY": 16,
+                    "count": 12
+                }
+    });
+
+    player10SpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,3,1],"speed":0.1},
+            "left_walk": {"frames":[4,5,6,7,4],"speed":0.1},
+            "right_walk": {"frames":[8,9,10,11,8],"speed":0.1},
+            "up_walk":{"frames":[12,13,14,15,12],"speed":0.1},
+            "down_idle":1,
+            "left_idle":5,
+            "right_idle":9,
+            "up_idle":13
+            },
+            "images": ["player10.png"],
+            "frames":
+                {
+                    "height": 64,
+                    "width":64,
+                    "regX": 32,
+                    "regY": 32,
+                    "count": 16
+                }
+    });
+
+    player11SpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["player11.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":32,
+                    "regX": 16,
+                    "regY": 16,
+                    "count": 12
+                }
+    });
+
+
     //add player
     mainPlayer = new createjs.Sprite(player1SpriteSheet);
     mainPlayer.playerSprite = defaultPlayerSprite;
@@ -282,6 +352,9 @@ function initGame(){
     initDialog(mainPlayer);
 
     initSocket();
+
+    //init npc
+    initNPC();
 
     //sound
     //createjs.Sound.alternateExtensions = ["mp3"];
@@ -360,28 +433,41 @@ function updateCamera()
 }
 
 //init enemy
-function initEnemy(){
-    //enemy
-    var enemySpriteSheet = new createjs.SpriteSheet(
-		{
-			frames:{
-				regX:0, regY:0,
-				count:2,
-				width:103, height:81
-			}, images:["http://www.htmlgoodies.com/img/assets/yar.png"]
-		}
-	);
+function initNPC(){
+    //npc
+    var catSpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+             "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["cat2.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":31.5,
+                    "regX": 16,
+                    "regY": 16,
+                    "count": 12
+                }
+    });
     
-    //add enemy
-    enemy = new createjs.Sprite(enemySpriteSheet);
-    enemy.x = 200;
-    enemy.y = 150;
-    enemy.scaleX = 0.5;
-    enemy.scaleY = 0.5;
-    stage.addChild(enemy);
-    
+    //add npc
+    var catNpc = new createjs.Sprite(catSpriteSheet);
+    catNpc.x = 300;
+    catNpc.y = 150;
+    //catNpc.scaleX = 0.5;
+    //catNpc.scaleY = 0.5;
+    stage.addChild(catNpc);
     //animation
-    createjs.Tween.get(enemy,{loop:true}).to({y:enemy.y+20},700,createjs.Ease.quadInOut).to({y:enemy.y}, 700, createjs.Ease.quadInOut);
+    //createjs.Tween.get(catNpc,{loop:true}).to({y:enemy.y+20},700,createjs.Ease.quadInOut).to({y:enemy.y}, 700, createjs.Ease.quadInOut);
+
+    npcList.push(catNpc);
 }
 
 //add shoes 
@@ -706,6 +792,15 @@ function changePlayer(player,playerSpriteId,isMainPlayer,id){
             break;
         case 8:
             newSprite = player8SpriteSheet;
+            break;
+        case 9:
+            newSprite = player9SpriteSheet;
+            break;
+        case 10:
+            newSprite = player10SpriteSheet;
+            break;
+        case 11:
+            newSprite = player11SpriteSheet;
             break;
         default:
             newSprite = player1SpriteSheet;
