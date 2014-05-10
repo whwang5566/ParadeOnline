@@ -136,6 +136,9 @@ function initGame(){
 
     initSocket();
 
+    //init NPC
+    initNPC();
+    
     //sound
     //createjs.Sound.alternateExtensions = ["mp3"];
     createjs.Sound.registerSound("bgm.mp3","background");   
@@ -561,7 +564,7 @@ function addItemShoes(player){
     shoesItem.y = player.y;
     shoesItem.scaleX = 0.08;
     shoesItem.scaleY = 0.08;
-    stage.addChild(shoesItem);
+    PlayerContainer.addChild(shoesItem);
     
     //throw animation
     var throwX = shoesItem.x;
@@ -598,7 +601,7 @@ function addItemShoes(player){
     }
 
     //tween
-    createjs.Tween.get(shoesItem,{loop:false}).to({x:throwX,y:throwY,rotation:throwRotation},500,createjs.Ease.quadInOut).call(function(){stage.removeChild(this);});
+    createjs.Tween.get(shoesItem,{loop:false}).to({x:throwX,y:throwY,rotation:throwRotation},500,createjs.Ease.quadInOut).call(function(){PlayerContainer.removeChild(this);});
 
 }
 
