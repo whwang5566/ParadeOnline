@@ -44,6 +44,8 @@ var uiMenu;
 var socket;
 
 var canvas;
+var dialogButton;
+var dialogText;
 
 var PlayerContainer;
 var DialogContainer;
@@ -51,8 +53,21 @@ var DialogContainer;
 function initGame(){
     //resize canvas
  canvas = document.getElementById("gameStage");
-   // canvas.width  = window.innerWidth;
-   // canvas.height = window.innerHeight;
+ dialogButton = $("#dialogButton");
+ dialogTextInput = $("#dialogContent");
+
+ dialogButton.click(function()
+ {
+    console.log("test");
+
+ 
+    mainPlayer.dialog.text.text = dialogTextInput.val()+" ";
+    dialogTextInput.val("");
+
+    updateTargetPlayerDialog(mainPlayer);
+
+ });
+
 
     //stage
     stage = new createjs.Stage("gameStage");
@@ -105,7 +120,7 @@ function initGame(){
   dialogText.text = "Hello World" ;
   dialogText.textAlign = "center";
   dialogText.textBaseline = "bottom";
-  dialogText.text = "test" ;
+  dialogText.text = " " ;
   dialogText.color = "#FFFFFF";
 
 
