@@ -940,8 +940,12 @@ function otherPlayerSendInstruction(id,stateData){
 
 //init socket
 function initSocket(){
-    socket = io.connect('http://localhost');
+    //socket = io.connect('http://localhost');
 
+    var url = document.URL;
+    var split = url.split(':')[1];
+    console.log('url:'+split);
+    socket = io.connect('http:'+split);
     
     //self connect success and get all players data
     socket.on('clientConnect', function (data){

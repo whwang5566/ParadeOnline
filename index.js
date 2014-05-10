@@ -14,6 +14,7 @@ app.use(express.static(__dirname+"/client/css"));
 server.listen(port);
 
 //send game index.html
+app.use(express.favicon());
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/client/gameclient.html');
 });
