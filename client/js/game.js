@@ -74,7 +74,7 @@ function initGame(){
 
  dialogButton.click(function()
  {
-    console.log("test");
+    //console.log("test");
 
  
     mainPlayer.dialog.text.text = dialogTextInput.val()+" ";
@@ -567,30 +567,38 @@ function addItemShoes(player){
     var throwX = shoesItem.x;
     var throwY = shoesItem.y;
     //check direction
-    //console.log('move Direction:'+player.moveDirection);
+    var shoesOffset = 15;
+    var throwDistance = 60+Math.random()*10;
+    var throwDistanceXY = Math.random()*10;
+    var throwRotation = 180+Math.random()*180;
+
     switch(player.moveDirection){
         case 'up':
-            throwY -= 40;
+            shoesItem.y -= (shoesOffset+5);
+            throwY -= throwDistance;
             break;
         case 'down':
-            throwY += 40;
+            shoesItem.y += shoesOffset;
+            throwY += throwDistance;
             break;
         case 'right':
-            throwX += 30;
-            throwY -= 10;
+            shoesItem.x += shoesOffset;
+            throwX += throwDistance;
+            throwY -= throwDistanceXY;
             break;
         case 'left':
-            throwX -= 30;
-            throwY -= 10;
+            shoesItem.x -= (shoesOffset+5);
+            throwX -= throwDistance;
+            throwY -= throwDistanceXY;
             break;
         default:
-            throwX += 30;
-            throwY -= 10;
+            shoesItem.y += shoesOffset;
+            throwY += throwDistance;
             break;
     }
 
     //tween
-    createjs.Tween.get(shoesItem,{loop:false}).to({x:throwX,y:throwY,rotation:360},500,createjs.Ease.quadInOut).call(function(){stage.removeChild(this);});
+    createjs.Tween.get(shoesItem,{loop:false}).to({x:throwX,y:throwY,rotation:throwRotation},500,createjs.Ease.quadInOut).call(function(){stage.removeChild(this);});
 
 }
 
@@ -706,6 +714,8 @@ function handleKeyDown(event){
             break;
         case KEYCODE_SPACE:
             addItemShoes(mainPlayer);
+            //send to server
+            sendPlayerInstructionToServer('keySpace');
             break;
     }
 }
@@ -783,9 +793,37 @@ function updatePlayer(id,stateData){
        player.x = stateData.x;
        player.y = stateData.y;
        changePlayer(player,stateData.playerSprite,false,id);
+       player.moveDirection = stateData.moveDirection;
        if(player.currentAnimation != stateData.animation) player.gotoAndPlay(stateData.animation);
 
        //import! need update
+        stage.update();
+
+        updateTargetPlayerDialog(player);
+
+    }
+}
+
+//update player state
+
+function otherPlayerSendInstruction(id,stateData){
+
+    //add to list
+    var player = playersList[id];
+
+    //if don't hve player , need create
+    if(!player){
+        addNewPlayer(id,stateData.x,stateData.y);
+        player = playersList[id];
+    }
+
+    if(stateData)
+    {
+        //console.log(stateData.instruction);
+        if(stateData.instruction == 'keySpace'){
+            addItemShoes(player);
+        }
+        //import! need update
         stage.update();
 
         updateTargetPlayerDialog(player);
@@ -830,6 +868,10 @@ function initSocket(){
         otherPlayerSay(data.id,data.state);
     });
 
+    socket.on('otherClientSendInstruction',function(data){
+        //console.log(data);
+        otherPlayerSendInstruction(data.id,data.state);
+    });
 
 
 }
@@ -856,10 +898,20 @@ function sendPlayerStateToServer(){
         x : mainPlayer.x,
         y : mainPlayer.y,
         playerSprite : mainPlayer.playerSprite,
+        moveDirection : mainPlayer.moveDirection,
         animation : mainPlayer.currentAnimation
     };
 
     if(socket) socket.emit('clientStateChange', playerData);
+}
+
+//send to server
+function sendPlayerInstructionToServer(instruction){
+    var playerData = {
+        'instruction':instruction
+    };
+
+    if(socket) socket.emit('clientSendInstruction', playerData);
 }
 
 //change player sprite
@@ -946,7 +998,7 @@ function changePlayer(player,playerSpriteId,isMainPlayer,id){
     //set player
     if(id != undefined ) 
     {
-        console.log('spriteId:'+playerSpriteId +' id:'+id);
+        //console.log('spriteId:'+playerSpriteId +' id:'+id);
         playersList[id] = player;
     }
 
