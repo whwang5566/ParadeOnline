@@ -6,17 +6,18 @@ var sceneBackground;
 var moveSpeed = 3;
 
 //keyboard key
-var KEYCODE_UP = 38;		//usefull keycode
-var KEYCODE_LEFT = 37;		//usefull keycode
-var KEYCODE_RIGHT = 39;		//usefull keycode
-var KEYCODE_DOWN = 40;		//usefull keycode
-var KEYCODE_SPACE = 32;		//usefull keycode
+var KEYCODE_UP = 38;        //usefull keycode
+var KEYCODE_LEFT = 37;      //usefull keycode
+var KEYCODE_RIGHT = 39;     //usefull keycode
+var KEYCODE_DOWN = 40;      //usefull keycode
+var KEYCODE_SPACE = 32;     //usefull keycode
+var KEYCODE_X = 88;
 
 //Predefined Variable
 var DialogPaddingX = 10;
 var DialogPaddingY = 10;
 var DialogRoundSize = 10;
-  var TextOffestY = 30;
+var TextOffestY = 30;
 
 //player spritesheet
 var player1SpriteSheet;
@@ -27,6 +28,13 @@ var player5SpriteSheet;
 var player6SpriteSheet;
 var player7SpriteSheet;
 var player8SpriteSheet;
+var player9SpriteSheet;
+var player10SpriteSheet;
+var player11SpriteSheet;
+
+var policeSpriteSheet;
+
+
 
 //players
 var playersList = [];
@@ -39,8 +47,10 @@ var moveDown = false;
 var isMove = false;
 var defaultPlayerSprite = 1;
 
-//enemy
-var enemy;
+
+
+//npc
+var npcList = [];
 
 //sound
 var backgroundSound;
@@ -57,6 +67,7 @@ var dialogText;
 
 var PlayerContainer;
 var DialogContainer;
+var UIContainer;
 
 function initGame(){
     //resize canvas
@@ -66,7 +77,7 @@ function initGame(){
 
  dialogButton.click(function()
  {
-    console.log("test");
+    //console.log("test");
 
  
     mainPlayer.dialog.text.text = dialogTextInput.val()+" ";
@@ -82,32 +93,172 @@ function initGame(){
 
     //stage
     stage = new createjs.Stage("gameStage");
+    PlayerContainer= new createjs.Container(); 
+    DialogContainer= new createjs.Container(); 
+    UIContainer = new createjs.Container(); 
     
     //background
     sceneBackground = new createjs.Bitmap("map.png"); 
+
     stage.addChild(sceneBackground);
+    stage.addChild(PlayerContainer);
+    stage.addChild(DialogContainer);
+    stage.addChild(UIContainer);
+
     
-    //players
+    initPlayerSpriteSheet();
+   
+
+    var police = new createjs.Sprite(policeSpriteSheet);
+    police.x = 650;
+    police.y = 570;
+    police.scaleX = 1;
+    police.scaleY = 1;
+    police.gotoAndPlay("down_idle");
+    PlayerContainer.addChild(police);
+
+
+
+    //add player
+    mainPlayer = new createjs.Sprite(player1SpriteSheet);
+    mainPlayer.playerSprite = defaultPlayerSprite;
+
+    PlayerContainer.addChild(mainPlayer);
+    
+    //position
+    mainPlayer.x = 500;
+    mainPlayer.y = 500;
+
+    
+    //animation
+    mainPlayer.gotoAndPlay("down_idle");
+    mainPlayer.moveDirection = 'down';
+
+
+    initDialog(mainPlayer);
+
+    initSocket();
+
+    //sound
+    //createjs.Sound.alternateExtensions = ["mp3"];
+    createjs.Sound.registerSound("bgm.mp3","background");   
+    createjs.Sound.addEventListener("fileload", loadSoundHandler);
+    
+    //register key functions
+    document.onkeydown = handleKeyDown;
+    document.onkeyup = handleKeyUp;
+
+
+
+
+  fang = new createjs.Bitmap("fang.png"); 
+  fang.scaleX=0.5;
+  fang.scaleY=0.5;
+  fang.x = 0;
+  fang.y = 100;
+  fang.alpha = 0;
+
+  TopDialogBackground  = new createjs.Shape();
+  TopDialogBackground.color = "#FFFFFF";
+  TopDialogBackground.alpha = 0.7;
+  TopDialogBackground.graphics.clear().beginFill("black").drawRoundRect(10,210,380,80,10);
+  TopDialogBackground.alpha = 0;
+
+
+  TopDialogText = new createjs.Text("Hello World", "20px Arial", "#ff7700");
+  TopDialogText.textAlign = "left";
+  TopDialogText.textBaseline = "top";
+  TopDialogText.text = "我是超越憲法的男人。" ;
+  TopDialogText.color = "#FFFFFF";
+  TopDialogText.x = 130;
+  TopDialogText.y = 220;
+  TopDialogText.alpha = 0;
+
+   
+    
+   UIContainer.addChild(TopDialogBackground);
+   UIContainer.addChild(TopDialogText);
+   UIContainer.addChild(fang);
+
+
+    
+    updateCamera();
+    //ticker
+    createjs.Ticker.addEventListener("tick", handleTick);
+    createjs.Ticker.setFPS(60);       
+}   
+
+var showDialog = false;
+var fang;
+var TopDialogBackground;
+var TopDialogText;
+
+function switchDialog()
+{
+    if(!showDialog)
+    {
+        createjs.Tween.get(fang,{loop:false}).to({alpha:1},300,createjs.Ease.quadInOut);
+        createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
+        createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
+    }
+    else
+    {
+       createjs.Tween.get(fang,{loop:false}).to({alpha:0},300,createjs.Ease.quadInOut);
+       createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
+
+       createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
+    }
+
+    showDialog = !showDialog;
+}
+
+
+function initPlayerSpriteSheet()
+{
+
+    policeSpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["policeA.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":30,
+                    "regX": 15,
+                    "regY": 16,
+                    "count": 12
+                }
+    }); 
+
+     //players
     player1SpriteSheet = new createjs.SpriteSheet({
         "animations":{
-			"down_walk": {"frames":[0,1,2,1],"speed":0.1},
-			"left_walk": {"frames":[3,4,5,4],"speed":0.1},
-			"right_walk": {"frames":[6,7,8,7],"speed":0.1},
-			"up_walk":{"frames":[9,10,11,10],"speed":0.1},
-			"down_idle":1,
-			"left_idle":4,
-			"right_idle":7,
-			"up_idle":10
-			},
-			"images": ["player1.png"],
-			"frames":
-				{
-					"height": 32,
-					"width":30,
-					"regX": 16,
-					"regY": 15,
-					"count": 12
-				}
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["player1.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":30,
+                    "regX": 16,
+                    "regY": 15,
+                    "count": 12
+                }
     });
 
     player2SpriteSheet = new createjs.SpriteSheet({
@@ -264,40 +415,78 @@ function initGame(){
                 }
     });
 
-    //add player
-    mainPlayer = new createjs.Sprite(player1SpriteSheet);
-    mainPlayer.playerSprite = defaultPlayerSprite;
+      player9SpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["player9.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":32,
+                    "regX": 16,
+                    "regY": 16,
+                    "count": 12
+                }
+    });
 
-    stage.addChild(mainPlayer);
-    
-    //position
-    mainPlayer.x = 500;
-    mainPlayer.y = 500;
+    player10SpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,3,1],"speed":0.1},
+            "left_walk": {"frames":[4,5,6,7,4],"speed":0.1},
+            "right_walk": {"frames":[8,9,10,11,8],"speed":0.1},
+            "up_walk":{"frames":[12,13,14,15,12],"speed":0.1},
+            "down_idle":1,
+            "left_idle":5,
+            "right_idle":9,
+            "up_idle":13
+            },
+            "images": ["player10.png"],
+            "frames":
+                {
+                    "height": 64,
+                    "width":64,
+                    "regX": 32,
+                    "regY": 32,
+                    "count": 16
+                }
+    });
 
-    
-    //animation
-    mainPlayer.gotoAndPlay("down_idle");
+    player11SpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["player11.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":32,
+                    "regX": 16,
+                    "regY": 16,
+                    "count": 12
+                }
+    });
 
 
-    initDialog(mainPlayer);
+}
 
-    initSocket();
 
-    //sound
-    //createjs.Sound.alternateExtensions = ["mp3"];
-    createjs.Sound.registerSound("bgm.mp3","background");   
-    createjs.Sound.addEventListener("fileload", loadSoundHandler);
-    
-    //register key functions
-    document.onkeydown = handleKeyDown;
-    document.onkeyup = handleKeyUp;
-    
-    updateCamera();
-    //ticker
-    createjs.Ticker.addEventListener("tick", handleTick);
-    createjs.Ticker.setFPS(60);       
-}   
 
+ 
 function initDialog(player)
 {
   var dialogText = new createjs.Text("Hello World", "20px Arial", "#ff7700");
@@ -317,8 +506,12 @@ function initDialog(player)
   updateTargetPlayerDialog(player);
 
   //mainPlayer.dialog.background =  dialog;
-  stage.addChild(TextBackground);
-  stage.addChild(dialogText);
+  DialogContainer.addChild(TextBackground);
+  DialogContainer.addChild(dialogText);
+
+
+
+  
 }
 
 
@@ -357,36 +550,52 @@ function updateCamera()
     if(stage.y>0)stage.y = 0;
     if(stage.x<-(bgWidth-canvas.width))stage.x = -(bgWidth-canvas.width);
     if(stage.y<-(bgHeight-canvas.height))stage. y= -(bgHeight-canvas.height);
+
+    UIContainer.x = - stage.x;
+    UIContainer.y = - stage.y;
 }
 
 //init enemy
-function initEnemy(){
-    //enemy
-    var enemySpriteSheet = new createjs.SpriteSheet(
-		{
-			frames:{
-				regX:0, regY:0,
-				count:2,
-				width:103, height:81
-			}, images:["http://www.htmlgoodies.com/img/assets/yar.png"]
-		}
-	);
+function initNPC(){
+    //npc
+    var catSpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+             "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["cat2.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":31.5,
+                    "regX": 16,
+                    "regY": 16,
+                    "count": 12
+                }
+    });
     
-    //add enemy
-    enemy = new createjs.Sprite(enemySpriteSheet);
-    enemy.x = 200;
-    enemy.y = 150;
-    enemy.scaleX = 0.5;
-    enemy.scaleY = 0.5;
-    stage.addChild(enemy);
-    
+    //add npc
+    var catNpc = new createjs.Sprite(catSpriteSheet);
+    catNpc.x = 300;
+    catNpc.y = 150;
+    //catNpc.scaleX = 0.5;
+    //catNpc.scaleY = 0.5;
+    stage.addChild(catNpc);
     //animation
-    createjs.Tween.get(enemy,{loop:true}).to({y:enemy.y+20},700,createjs.Ease.quadInOut).to({y:enemy.y}, 700, createjs.Ease.quadInOut);
+    //createjs.Tween.get(catNpc,{loop:true}).to({y:enemy.y+20},700,createjs.Ease.quadInOut).to({y:enemy.y}, 700, createjs.Ease.quadInOut);
+
+    npcList.push(catNpc);
 }
 
 //add shoes 
-function addItemShoes(){
-    //enemy
+function addItemShoes(player){
+    //shoes
     var shoesSpriteSheet = new createjs.SpriteSheet(
         {
             frames:{
@@ -397,16 +606,51 @@ function addItemShoes(){
         }
     );
     
-    //add enemy
+    //add shoes
     var shoesItem = new createjs.Sprite(shoesSpriteSheet);
-    shoesItem.x = 200;
-    shoesItem.y = 150;
-    shoesItem.scaleX = 0.5;
-    shoesItem.scaleY = 0.5;
+    shoesItem.x = player.x;
+    shoesItem.y = player.y;
+    shoesItem.scaleX = 0.08;
+    shoesItem.scaleY = 0.08;
     stage.addChild(shoesItem);
     
-    //animation
-    createjs.Tween.get(shoesItem,{loop:true}).to({y:shoesItem.y+20},700,createjs.Ease.quadInOut).to({y:shoesItem.y}, 700, createjs.Ease.quadInOut);
+    //throw animation
+    var throwX = shoesItem.x;
+    var throwY = shoesItem.y;
+    //check direction
+    var shoesOffset = 15;
+    var throwDistance = 60+Math.random()*10;
+    var throwDistanceXY = Math.random()*10;
+    var throwRotation = 180+Math.random()*180;
+
+    switch(player.moveDirection){
+        case 'up':
+            shoesItem.y -= (shoesOffset+5);
+            throwY -= throwDistance;
+            break;
+        case 'down':
+            shoesItem.y += shoesOffset;
+            throwY += throwDistance;
+            break;
+        case 'right':
+            shoesItem.x += shoesOffset;
+            throwX += throwDistance;
+            throwY -= throwDistanceXY;
+            break;
+        case 'left':
+            shoesItem.x -= (shoesOffset+5);
+            throwX -= throwDistance;
+            throwY -= throwDistanceXY;
+            break;
+        default:
+            shoesItem.y += shoesOffset;
+            throwY += throwDistance;
+            break;
+    }
+
+    //tween
+    createjs.Tween.get(shoesItem,{loop:false}).to({x:throwX,y:throwY,rotation:throwRotation},500,createjs.Ease.quadInOut).call(function(){stage.removeChild(this);});
+
 }
 
 //add event
@@ -444,18 +688,22 @@ function handleTick() {
     if(moveUp === true){
         if(mainPlayer.currentAnimation != "up_walk") mainPlayer.gotoAndPlay("up_walk");
         mainPlayer.y -= moveSpeed;
+        mainPlayer.moveDirection = 'up';
     }
     else if(moveDown === true){
         if(mainPlayer.currentAnimation != "down_walk") mainPlayer.gotoAndPlay("down_walk");
         mainPlayer.y += moveSpeed;
+        mainPlayer.moveDirection = 'down';
     }
     else if(moveLeft === true){
         if(mainPlayer.currentAnimation != "left_walk") mainPlayer.gotoAndPlay("left_walk");
         mainPlayer.x -= moveSpeed;
+        mainPlayer.moveDirection = 'left';
     }
     else if(moveRight === true){
         if(mainPlayer.currentAnimation != "right_walk") mainPlayer.gotoAndPlay("right_walk");
         mainPlayer.x += moveSpeed;
+        mainPlayer.moveDirection = 'right';
     }
     
     //set idel animation
@@ -496,15 +744,25 @@ function handleTick() {
     stage.update(); 
 }     
 
-var backgroundSound;
-
 function loadSoundHandler(event){
-    backgroundSound = createjs.Sound.play("background",{loop:true});
+    var backgroundSound = createjs.Sound.play("background",{loop:true});
     backgroundSound.volume = 1;
 }
 
 function handleKeyDown(event){
+
+     if(dialogTextInput.is(":focus"))
+        {
+            return;
+        }
     switch(event.keyCode){
+
+        case KEYCODE_X:
+
+            switchDialog();
+       
+            break;
+
         case KEYCODE_UP:
             moveUp = true
             break;
@@ -516,6 +774,11 @@ function handleKeyDown(event){
             break;
         case KEYCODE_RIGHT:
             moveRight = true;
+            break;
+        case KEYCODE_SPACE:
+            addItemShoes(mainPlayer);
+            //send to server
+            sendPlayerInstructionToServer('keySpace');
             break;
     }
 }
@@ -544,7 +807,7 @@ function addNewPlayer(id,x,y){
     var player = new createjs.Sprite(player1SpriteSheet);
     player.playerSprite = defaultPlayerSprite;
 
-    stage.addChild(player);
+    PlayerContainer.addChild(player);
     
 
     initDialog(player);
@@ -567,7 +830,7 @@ function removePlayer(id){
 
     if(player)
     {
-        stage.removeChild(player);
+        PlayerContainer.removeChild(player);
         delete playersList[id];
     }
 }
@@ -593,9 +856,37 @@ function updatePlayer(id,stateData){
        player.x = stateData.x;
        player.y = stateData.y;
        changePlayer(player,stateData.playerSprite,false,id);
+       player.moveDirection = stateData.moveDirection;
        if(player.currentAnimation != stateData.animation) player.gotoAndPlay(stateData.animation);
 
        //import! need update
+        stage.update();
+
+        updateTargetPlayerDialog(player);
+
+    }
+}
+
+//update player state
+
+function otherPlayerSendInstruction(id,stateData){
+
+    //add to list
+    var player = playersList[id];
+
+    //if don't hve player , need create
+    if(!player){
+        addNewPlayer(id,stateData.x,stateData.y);
+        player = playersList[id];
+    }
+
+    if(stateData)
+    {
+        //console.log(stateData.instruction);
+        if(stateData.instruction == 'keySpace'){
+            addItemShoes(player);
+        }
+        //import! need update
         stage.update();
 
         updateTargetPlayerDialog(player);
@@ -640,6 +931,10 @@ function initSocket(){
         otherPlayerSay(data.id,data.state);
     });
 
+    socket.on('otherClientSendInstruction',function(data){
+        //console.log(data);
+        otherPlayerSendInstruction(data.id,data.state);
+    });
 
 
 }
@@ -666,10 +961,20 @@ function sendPlayerStateToServer(){
         x : mainPlayer.x,
         y : mainPlayer.y,
         playerSprite : mainPlayer.playerSprite,
+        moveDirection : mainPlayer.moveDirection,
         animation : mainPlayer.currentAnimation
     };
 
     if(socket) socket.emit('clientStateChange', playerData);
+}
+
+//send to server
+function sendPlayerInstructionToServer(instruction){
+    var playerData = {
+        'instruction':instruction
+    };
+
+    if(socket) socket.emit('clientSendInstruction', playerData);
 }
 
 //change player sprite
@@ -709,6 +1014,15 @@ function changePlayer(player,playerSpriteId,isMainPlayer,id){
         case 8:
             newSprite = player8SpriteSheet;
             break;
+        case 9:
+            newSprite = player9SpriteSheet;
+            break;
+        case 10:
+            newSprite = player10SpriteSheet;
+            break;
+        case 11:
+            newSprite = player11SpriteSheet;
+            break;
         default:
             newSprite = player1SpriteSheet;
             break;
@@ -720,7 +1034,7 @@ function changePlayer(player,playerSpriteId,isMainPlayer,id){
     var tempDialog = player.dialog;
 
     //remove player
-    stage.removeChild(player);
+    PlayerContainer.removeChild(player);
 
     //add player
     player = new createjs.Sprite(newSprite);
@@ -730,7 +1044,7 @@ function changePlayer(player,playerSpriteId,isMainPlayer,id){
     //animation
     //player.gotoAndPlay("down_idle");
 
-    stage.addChild(player);
+    PlayerContainer.addChild(player);
     
     //position
     player.x = tempX;
@@ -747,7 +1061,7 @@ function changePlayer(player,playerSpriteId,isMainPlayer,id){
     //set player
     if(id != undefined ) 
     {
-        console.log('spriteId:'+playerSpriteId +' id:'+id);
+        //console.log('spriteId:'+playerSpriteId +' id:'+id);
         playersList[id] = player;
     }
 
