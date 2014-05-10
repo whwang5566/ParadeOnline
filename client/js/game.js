@@ -872,9 +872,19 @@ function removePlayer(id){
     //add to list
     var player = playersList[id];
 
+
+
+
+
     if(player)
     {
+    var dialogText = player.dialog.text;
+    var TextBackground = player.dialog.background;
+        
         PlayerContainer.removeChild(player);
+
+            DialogContainer.removeChild(dialogText);
+    DialogContainer.removeChild(TextBackground);
         delete playersList[id];
     }
 }
