@@ -31,6 +31,7 @@ var player8SpriteSheet;
 var player9SpriteSheet;
 var player10SpriteSheet;
 var player11SpriteSheet;
+var player12SpriteSheet;
 
 var policeSpriteSheet;
 
@@ -141,6 +142,9 @@ function initGame(){
 
     initSocket();
 
+    //init NPC
+    initNPC();
+    
     //sound
     //createjs.Sound.alternateExtensions = ["mp3"];
     createjs.Sound.registerSound("bgm.mp3","background");   
@@ -473,6 +477,28 @@ function initPlayerSpriteSheet()
             "up_idle":10
             },
             "images": ["player11.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":32,
+                    "regX": 16,
+                    "regY": 16,
+                    "count": 12
+                }
+    });
+
+    player12SpriteSheet = new createjs.SpriteSheet({
+        "animations":{
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["player12.png"],
             "frames":
                 {
                     "height": 32,
@@ -1056,6 +1082,9 @@ function changePlayer(player,playerSpriteId,isMainPlayer,id){
             break;
         case 11:
             newSprite = player11SpriteSheet;
+            break;
+        case 12:
+            newSprite = player12SpriteSheet;
             break;
         default:
             newSprite = player1SpriteSheet;
