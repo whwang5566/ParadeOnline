@@ -2,7 +2,6 @@
 //data
 var stage;
 var mainPlayer;
-var sceneBackground;
 var moveSpeed = 3;
 
 //keyboard key
@@ -97,16 +96,16 @@ function initGame(){
 
 TMXMapLoader.loadJSON("map.json",function(layer)
     {
-        //stage.addChild(layer['Background']);
-        //stage.addChild(layer['Building']);
+        stage.addChild(layer['Background']);
+        stage.addChild(layer['Building']);
 
-    //stage.addChild(layer['Object']);
+    stage.addChild(layer['Object']);
 
      stage.addChild(PlayerContainer);
 
 
-    //stage.addChild(layer['Decorate']);
-    //stage.addChild(layer['Decorate2']);
+    stage.addChild(layer['Decorate']);
+    stage.addChild(layer['Decorate2']);
 
 
     stage.addChild(DialogContainer);
@@ -117,9 +116,9 @@ TMXMapLoader.loadJSON("map.json",function(layer)
     });
 
     //background
-    sceneBackground = new createjs.Bitmap("map.png"); 
+    //sceneBackground = new createjs.Bitmap("map.png"); 
 
-    stage.addChild(sceneBackground);
+    //stage.addChild(sceneBackground);
 
 
     
@@ -597,8 +596,8 @@ function updateCamera()
 {
     stage.x = -mainPlayer.x + canvas.width/2;
     stage.y = -mainPlayer.y + canvas.height/2;
-    var bgWidth = sceneBackground.image.width;
-    var bgHeight =  sceneBackground.image.height;
+    var bgWidth = TMXMapLoader.width;//sceneBackground.image.width;
+    var bgHeight =  TMXMapLoader.height;//sceneBackground.image.height;
 
     if(stage.x>0)stage.x = 0;
     if(stage.y>0)stage.y = 0;

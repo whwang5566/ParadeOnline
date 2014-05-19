@@ -53,9 +53,10 @@ $.getJSON(filePath, function(json)
 for(var key in layers)
 {
 	var currentLayer = layers[key];
-	TMXMapLoader.Layers[currentLayer.name] = TMXMapLoader.InitLayer(layers[key]);
+	TMXMapLoader.Layers[currentLayer.name] = TMXMapLoader.InitLayer(layers[key],true);
 	
 }
+
 callbackFunction(TMXMapLoader.Layers);
 //
 	//console.log(TMXMapLoader.IndexRemap(3));
@@ -67,15 +68,27 @@ callbackFunction(TMXMapLoader.Layers);
 }
 
 
-TMXMapLoader.InitLayer = function(layer)
+TMXMapLoader.InitLayer = function(layer,isPrerender)
 {
+	var container = new createjs.Container();
+
+	if(isPrerender)
+	{
+		var prerenderPic = new createjs.Bitmap(layer.name+".png"); 
+		
+		container.addChild(prerenderPic);
+		return container;
+	}
+	else
+	{
+
 	var width = layer.width;
 	var height = layer.height;
 	var tileWidth = TMXMapLoader.tileWidth;
 	var tileHeight = TMXMapLoader.tileHeight;
 
 	var data = layer.data;
-	var container = new createjs.Container();
+	
 
 
 	for (var i = 0; i < data.length; i++) {
@@ -97,9 +110,8 @@ TMXMapLoader.InitLayer = function(layer)
 		cellBitmap.y = positionY;
 		container.addChild(cellBitmap);
 	}
-
 	return container;
-
+	}
 }
 
 
