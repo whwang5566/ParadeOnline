@@ -94,13 +94,33 @@ function initGame(){
     DialogContainer= new createjs.Container(); 
     UIContainer = new createjs.Container(); 
     
+
+TMXMapLoader.loadJSON("map.json",function(layer)
+    {
+        //stage.addChild(layer['Background']);
+        //stage.addChild(layer['Building']);
+
+    //stage.addChild(layer['Object']);
+
+     stage.addChild(PlayerContainer);
+
+
+    //stage.addChild(layer['Decorate']);
+    //stage.addChild(layer['Decorate2']);
+
+
+    stage.addChild(DialogContainer);
+    stage.addChild(UIContainer);
+        // console.log(layer);
+
+
+    });
+
     //background
     sceneBackground = new createjs.Bitmap("map.png"); 
 
     stage.addChild(sceneBackground);
-    stage.addChild(PlayerContainer);
-    stage.addChild(DialogContainer);
-    stage.addChild(UIContainer);
+
 
     
     initPlayerSpriteSheet();
@@ -710,6 +730,9 @@ function initUIEvents(){
 var needSync = false;
 //tick
 function handleTick() {
+
+
+//console.log(createjs.Ticker.getFPS());
 
     isMove = moveUp || moveDown || moveLeft || moveRight;
 
