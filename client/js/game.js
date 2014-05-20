@@ -94,7 +94,7 @@ function initGame(){
     UIContainer = new createjs.Container(); 
     
 
-TMXMapLoader.loadJSON("map.json",function(layer)
+TMXMapLoader.loadJSON("map.json",true,function(layer)
     {
         stage.addChild(layer['Background']);
         stage.addChild(layer['Building']);
@@ -111,7 +111,7 @@ TMXMapLoader.loadJSON("map.json",function(layer)
     stage.addChild(DialogContainer);
     stage.addChild(UIContainer);
         // console.log(layer);
-
+        TMXMapLoader.CreateCollisionMapByLayer(['Building','Object']);
 
     });
 
@@ -743,22 +743,42 @@ function handleTick() {
     //move and set animation
     if(moveUp === true){
         if(mainPlayer.currentAnimation != "up_walk") mainPlayer.gotoAndPlay("up_walk");
+
+        if(!TMXMapLoader.IsBlock(mainPlayer.x,mainPlayer.y-moveSpeed))
+        {
         mainPlayer.y -= moveSpeed;
+        }
+
         mainPlayer.moveDirection = 'up';
     }
     else if(moveDown === true){
         if(mainPlayer.currentAnimation != "down_walk") mainPlayer.gotoAndPlay("down_walk");
+
+        if(!TMXMapLoader.IsBlock(mainPlayer.x,mainPlayer.y+moveSpeed+16))
+        {
         mainPlayer.y += moveSpeed;
+        }
+
         mainPlayer.moveDirection = 'down';
     }
     else if(moveLeft === true){
         if(mainPlayer.currentAnimation != "left_walk") mainPlayer.gotoAndPlay("left_walk");
+
+        if(!TMXMapLoader.IsBlock(mainPlayer.x-moveSpeed-14,mainPlayer.y))
+        {
         mainPlayer.x -= moveSpeed;
+        }
+
         mainPlayer.moveDirection = 'left';
     }
     else if(moveRight === true){
         if(mainPlayer.currentAnimation != "right_walk") mainPlayer.gotoAndPlay("right_walk");
+
+         if(!TMXMapLoader.IsBlock(mainPlayer.x+moveSpeed+10,mainPlayer.y))
+        {
         mainPlayer.x += moveSpeed;
+        }
+
         mainPlayer.moveDirection = 'right';
     }
     

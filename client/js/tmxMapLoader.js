@@ -2,8 +2,9 @@
 var TMXMapLoader = {};
 
 TMXMapLoader.Layers ={};
+TMXMapLoader.LayersData ={};
 
-TMXMapLoader.loadJSON = function(filePath,callbackFunction)
+TMXMapLoader.loadJSON = function(filePath,isPrerender,callbackFunction)
 {
 
 //TMXMapLoader.callbackFunction =callbackFunction;
@@ -18,6 +19,8 @@ $.getJSON(filePath, function(json)
     TMXMapLoader.SpriteSheets = [];
  	var tilesets = json.tilesets;
 
+if(!isPrerender)
+{
 	for(var key in tilesets)
 	{ 
 			var currentSet = tilesets[key];
@@ -41,7 +44,7 @@ $.getJSON(filePath, function(json)
 		    })
 		);
 	}
-
+}
 
 	var layers = json.layers;
 
@@ -53,7 +56,8 @@ $.getJSON(filePath, function(json)
 for(var key in layers)
 {
 	var currentLayer = layers[key];
-	TMXMapLoader.Layers[currentLayer.name] = TMXMapLoader.InitLayer(layers[key],true);
+	TMXMapLoader.Layers[currentLayer.name] = TMXMapLoader.InitLayer(layers[key],isPrerender);
+	TMXMapLoader.LayersData[currentLayer.name] = layers[key].data;
 	
 }
 
@@ -67,6 +71,56 @@ callbackFunction(TMXMapLoader.Layers);
 });
 }
 
+TMXMapLoader.CreateCollisionMapByLayer = function(nameArray)
+{
+	var widthCount = TMXMapLoader.origin.width;
+	var heightCount = TMXMapLoader.origin.height;
+
+	TMXMapLoader.CollideArray = new Array(widthCount);
+
+	for (i = 0 ; i < widthCount; i++) 
+	{
+  		TMXMapLoader.CollideArray[i] = new Array(heightCount);
+	}
+
+	for (i = 0 ; i < widthCount; i++) 
+	{
+		for (j = 0 ; j < heightCount; j++) 
+		{
+			TMXMapLoader.CollideArray[i][j] = false;
+		}
+	}
+
+
+   for(var key in nameArray)
+   {
+   		var name = nameArray[key];
+   		var datas = TMXMapLoader.LayersData[name];
+
+   		for(var key2 in datas)
+   		{
+   			var currentTile = datas[key2];
+   			
+   			if(currentTile!=0)
+   			{
+   				var x = key2%widthCount;
+   				var y = (key2-x)/widthCount;
+
+   				TMXMapLoader.CollideArray[x][y] = true;
+   			}
+   		}
+   }
+}
+
+TMXMapLoader.IsBlock = function(x,y)
+{
+	var indexX = Math.floor(x/TMXMapLoader.tileWidth);
+	var indexY = Math.floor(y/TMXMapLoader.tileHeight);
+
+	return this.CollideArray[indexX][indexY];
+
+}
+
 
 TMXMapLoader.InitLayer = function(layer,isPrerender)
 {
@@ -75,7 +129,7 @@ TMXMapLoader.InitLayer = function(layer,isPrerender)
 	if(isPrerender)
 	{
 		var prerenderPic = new createjs.Bitmap(layer.name+".png"); 
-		
+
 		container.addChild(prerenderPic);
 		return container;
 	}
