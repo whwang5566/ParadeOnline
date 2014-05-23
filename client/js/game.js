@@ -69,6 +69,7 @@ var PlayerContainer;
 var DialogContainer;
 var UIContainer;
 var DialogDistance = 20;
+var isCompositioned = false;
 var police;
 
 function initGame(){
@@ -78,10 +79,15 @@ function initGame(){
  dialogTextInput = $("#dialogContent");
 
  dialogTextInput.keyup(function(e){
-    if(e.keyCode == 13)
+
+    if(e.keyCode == 13 && !isCompositioned )
     {
      userSayEvent();
     }
+}).on('compositionstart', function(){
+    isCompositioned = true;
+}).on('compositionend', function(){
+    isCompositioned = false;
 });
 
  dialogButton.click(userSayEvent);
