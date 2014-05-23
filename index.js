@@ -6,9 +6,9 @@ var express = require('express')
 var port = 5566;
 
 
-var MapRender = require('./prerender.js');
+//var MapRender = require('./prerender.js');
 
-MapRender.PreRenderWithJSON(__dirname+'/client/assets/map.json',__dirname+"/client/assets",__dirname+"/client/assets");
+//MapRender.PreRenderWithJSON(__dirname+'/client/assets/map.json',__dirname+"/client/assets",__dirname+"/client/assets");
 
 
 
