@@ -72,7 +72,48 @@ var DialogDistance = 20;
 var isCompositioned = false;
 var police;
 
+var panorama;
+var yuan;
+
+var positionPoints = 
+[{x:990,y:1300,lat:25.044014,lng:121.51925},
+ {x:1541,y:1301,lat:25.043449,lng:121.519086},
+ {x:1982,y:416,lat:25.043081,lng:121.519911},
+];
+
+function interpret(x,y,points)
+{
+    var lng = 121.519086*((y-416)/(1301-416)) + 121.519911*((1301-y)/(1301-416))
+    var lat = 25.043449*((x-990)/(1541-990)) + 25.044014*((1541-x)/(1541-990));
+
+    return {x:lat,y:lng};
+}
+
 function initGame(){
+
+yuan = new google.maps.LatLng(25.044014,121.51925);
+
+var panoramaOptions = {
+  //position: fenway,
+  pov: {
+    heading: 90,
+    pitch: 10,
+    zoom: 1
+  },
+   linksControl: false,
+   enableCloseButton: false,
+  zoomControlOptions: {
+    style: google.maps.ZoomControlStyle.SMALL
+  }
+
+};
+panorama = new  google.maps.StreetViewPanorama(document.getElementById("map"), panoramaOptions);
+panorama.setPosition(yuan);
+
+
+
+
+
     //resize canvas
  canvas = document.getElementById("gameStage");
  dialogButton = $("#dialogButton");
@@ -148,13 +189,13 @@ TMXMapLoader.loadJSON("map.json",true,function(layer)
     PlayerContainer.addChild(mainPlayer);
     
     //position
-    mainPlayer.x = 500;
-    mainPlayer.y = 500;
+    mainPlayer.x = 990;
+    mainPlayer.y = 1300;
 
     
     //animation
-    mainPlayer.gotoAndPlay("down_idle");
-    mainPlayer.moveDirection = 'down';
+    mainPlayer.gotoAndPlay("up_idle");
+    mainPlayer.moveDirection = 'up';
 
 
     initDialog(mainPlayer);
@@ -819,7 +860,14 @@ function handleTick() {
     }
 
     //send to server
-    if(needSync) sendPlayerStateToServer();
+    if(needSync)
+        { 
+
+    var newView = interpret(mainPlayer.x,mainPlayer.y,positionPoints);
+    panorama.setPosition(new google.maps.LatLng(newView.x,newView.y));
+
+            sendPlayerStateToServer();
+        }
 
  var distance =getDistance(police,mainPlayer);
 
@@ -834,6 +882,8 @@ function handleTick() {
 
    //console.log(distance);
    // if(getDistance())
+
+   //console.log(mainPlayer.x+":"+mainPlayer.y);
 
     //update
     updateCamera();
@@ -864,15 +914,35 @@ function handleKeyDown(event){
 
         case KEYCODE_UP:
             moveUp = true
+            panorama.setPov({
+    heading: 90,
+    zoom:1,
+    pitch:0}
+  );
             break;
         case KEYCODE_DOWN:
             moveDown = true;
+            panorama.setPov({
+    heading: 270,
+    zoom:1,
+    pitch:0}
+  );
             break;
         case KEYCODE_LEFT:
             moveLeft = true;
+            panorama.setPov({
+    heading: 0,
+    zoom:1,
+    pitch:0}
+  );
             break;
         case KEYCODE_RIGHT:
             moveRight = true;
+            panorama.setPov({
+    heading: 180,
+    zoom:1,
+    pitch:0}
+  );
             break;
         case KEYCODE_SPACE:
             addItemShoes(mainPlayer);
@@ -962,6 +1032,10 @@ function updatePlayer(id,stateData){
 
     if(stateData)
     {
+
+
+
+
        player.x = stateData.x;
        player.y = stateData.y;
        changePlayer(player,stateData.playerSprite,false,id);
