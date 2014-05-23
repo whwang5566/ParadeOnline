@@ -215,6 +215,7 @@ var TopDialogText;
 
 function userSayEvent()
 {
+    //if(dialogTextInput.val()=="")return;
 
     mainPlayer.dialog.text.text = dialogTextInput.val()+" ";
 
@@ -744,7 +745,7 @@ function handleTick() {
     if(moveUp === true){
         if(mainPlayer.currentAnimation != "up_walk") mainPlayer.gotoAndPlay("up_walk");
 
-        if(!TMXMapLoader.IsBlock(mainPlayer.x,mainPlayer.y-moveSpeed))
+        if(!TMXMapLoader.IsBlockWithOffset(mainPlayer.x,mainPlayer.y-moveSpeed,10,0))
         {
         mainPlayer.y -= moveSpeed;
         }
@@ -754,7 +755,7 @@ function handleTick() {
     else if(moveDown === true){
         if(mainPlayer.currentAnimation != "down_walk") mainPlayer.gotoAndPlay("down_walk");
 
-        if(!TMXMapLoader.IsBlock(mainPlayer.x,mainPlayer.y+moveSpeed+16))
+        if(!TMXMapLoader.IsBlockWithOffset(mainPlayer.x,mainPlayer.y+moveSpeed+16,10,0))
         {
         mainPlayer.y += moveSpeed;
         }
@@ -764,7 +765,7 @@ function handleTick() {
     else if(moveLeft === true){
         if(mainPlayer.currentAnimation != "left_walk") mainPlayer.gotoAndPlay("left_walk");
 
-        if(!TMXMapLoader.IsBlock(mainPlayer.x-moveSpeed-14,mainPlayer.y))
+        if(!(TMXMapLoader.IsBlock(mainPlayer.x-moveSpeed-14,mainPlayer.y)||TMXMapLoader.IsBlock(mainPlayer.x-moveSpeed-14,mainPlayer.y+16)))
         {
         mainPlayer.x -= moveSpeed;
         }
@@ -774,7 +775,7 @@ function handleTick() {
     else if(moveRight === true){
         if(mainPlayer.currentAnimation != "right_walk") mainPlayer.gotoAndPlay("right_walk");
 
-         if(!TMXMapLoader.IsBlock(mainPlayer.x+moveSpeed+10,mainPlayer.y))
+         if(!(TMXMapLoader.IsBlock(mainPlayer.x+moveSpeed+10,mainPlayer.y)||TMXMapLoader.IsBlock(mainPlayer.x+moveSpeed+10,mainPlayer.y+16)))
         {
         mainPlayer.x += moveSpeed;
         }

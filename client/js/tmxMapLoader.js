@@ -121,6 +121,28 @@ TMXMapLoader.IsBlock = function(x,y)
 
 }
 
+TMXMapLoader.IsBlockWithOffset = function(x,y,offsetX,offsetY)
+{
+	var indexX = Math.floor(x/TMXMapLoader.tileWidth);
+	var indexY = Math.floor(y/TMXMapLoader.tileHeight);
+
+	if(TMXMapLoader.IsBlock(x,y))return true;
+
+	if(TMXMapLoader.IsBlock(x+offsetX,y))return true;
+
+	if(TMXMapLoader.IsBlock(x-offsetX,y))return true;
+
+	if(TMXMapLoader.IsBlock(x,y+offsetY))return true;
+
+	if(TMXMapLoader.IsBlock(x,y-offsetY))return true;
+
+	return false;
+
+}
+
+
+
+
 
 TMXMapLoader.InitLayer = function(layer,isPrerender)
 {
