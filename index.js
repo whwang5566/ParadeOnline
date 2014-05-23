@@ -5,6 +5,14 @@ var express = require('express')
 
 var port = 5566;
 
+
+var MapRender = require('./prerender.js');
+
+MapRender.PreRenderWithJSON(__dirname+'/client/assets/map.json',__dirname+"/client/assets",__dirname+"/client/assets");
+
+
+
+
 //static files
 app.use(express.static(__dirname+"/client/js"));
 app.use(express.static(__dirname+"/client/assets"));
