@@ -3,7 +3,7 @@ var express = require('express')
   	, server = require('http').createServer(app)
   	, io = require('socket.io').listen(server,{ log: false });
 
-var port = process.env.port | 5566;
+var port = process.env.PORT || 5566;
 
 
 //var MapRender = require('./prerender.js');
