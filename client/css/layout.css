@@ -25,16 +25,16 @@ body {
 .Mute {
 	position: relative;
 	/*left: 100px;*/
-	top: -285px;
-	left: 180px;
+	top: -485px;
+	left: -290px;
 	text-align: center;
 	color:#00ff00;
 }
 
 .ChangeCharacter{
 	position: relative;
-	top: -310px;
-	left: 210px;
+	top: -510px;
+	left: 10px;
 
 }
 
@@ -50,6 +50,10 @@ body {
 
 
 .map{
-	width:400px;
-	height:300px;
+	width:300px;
+	height:200px;
+	position: relative;
+	top: -100px;
+	left: 0px;
 }
+

@@ -218,8 +218,8 @@ TMXMapLoader.loadJSON("map.json",true,function(layer)
 
 
   fang = new createjs.Bitmap("fang.png"); 
-  fang.scaleX=0.5;
-  fang.scaleY=0.5;
+  fang.scaleX=1;
+  fang.scaleY=1;
   fang.x = 0;
   fang.y = 100;
   fang.alpha = 0;
@@ -227,17 +227,17 @@ TMXMapLoader.loadJSON("map.json",true,function(layer)
   TopDialogBackground  = new createjs.Shape();
   TopDialogBackground.color = "#FFFFFF";
   TopDialogBackground.alpha = 0.7;
-  TopDialogBackground.graphics.clear().beginFill("black").drawRoundRect(10,210,380,80,10);
+  TopDialogBackground.graphics.clear().beginFill("black").drawRoundRect(20,310,760,180,10);
   TopDialogBackground.alpha = 0;
 
 
-  TopDialogText = new createjs.Text("Hello World", "20px Arial", "#ff7700");
+  TopDialogText = new createjs.Text("Hello World", "30px Arial", "#ff7700");
   TopDialogText.textAlign = "left";
   TopDialogText.textBaseline = "top";
   TopDialogText.text = "我是超越憲法的男人。" ;
   TopDialogText.color = "#FFFFFF";
-  TopDialogText.x = 130;
-  TopDialogText.y = 220;
+  TopDialogText.x = 270;
+  TopDialogText.y = 330;
   TopDialogText.alpha = 0;
 
    
@@ -880,10 +880,6 @@ function handleTick() {
         switchDialog();
    }
 
-   //console.log(distance);
-   // if(getDistance())
-
-   //console.log(mainPlayer.x+":"+mainPlayer.y);
 
     //update
     updateCamera();
@@ -1032,10 +1028,6 @@ function updatePlayer(id,stateData){
 
     if(stateData)
     {
-
-
-
-
        player.x = stateData.x;
        player.y = stateData.y;
        changePlayer(player,stateData.playerSprite,false,id);
