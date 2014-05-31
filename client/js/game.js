@@ -220,10 +220,48 @@ TMXMapLoader.loadJSON("map.json",true,function(layer)
   TopDialogBackground.alpha = 0;
 
 
+  OptionBackground= new createjs.Shape();
+  OptionBackground.color = "#FFFFFF";
+  OptionBackground.graphics.clear().beginFill("black").drawRoundRect(220,110,560,180,10);
+  OptionBackground.alpha = 0;
+  UIContainer.addChild(OptionBackground);
+
+
+  OptionSelected = new createjs.Shape();
+  OptionSelected.color = "#FFFFFF";
+  OptionSelected.alpha = 0
+  OptionSelected.graphics.clear().beginFill("rgb(246,236,144)").drawRoundRect(0,0,520,40,10);
+
+  UIContainer.addChild(OptionSelected);
+
+ OptionTextArray =[];
+for(var i=0;i<4;i++)
+{
+    console.log("?");
+  var  optionText = new createjs.Text("Hello World", "24px Arial", "#ff7700");
+  optionText.textAlign = "left";
+  optionText.textBaseline = "top";
+  optionText.text = "選項"+(i+1) ;
+  optionText.color = "#FFFFFF";
+  optionText.x = 250;
+  optionText.y = 127+i*40;
+  optionText.alpha = 0;
+
+ 
+  OptionTextArray.push(optionText);
+
+
+  UIContainer.addChild(optionText);
+}
+
+
+OptionSelected.x =OptionTextArray[0].x - 7;
+OptionSelected.y =OptionTextArray[0].y - 7;
+
   TopDialogText = new createjs.Text("Hello World", "30px Arial", "#ff7700");
   TopDialogText.textAlign = "left";
   TopDialogText.textBaseline = "top";
-  TopDialogText.text = "我是超越憲法的男人。" ;
+  TopDialogText.text = "是超越憲法的男人。" ;
   TopDialogText.color = "#FFFFFF";
   TopDialogText.x = 270;
   TopDialogText.y = 330;
@@ -237,12 +275,6 @@ TMXMapLoader.loadJSON("map.json",true,function(layer)
   EnterHint.alpha = 0;
 
 
-
-
-
-
-
-//for
  
 
    UIContainer.addChild(EnterHint);
@@ -264,8 +296,6 @@ for(var key in json)
 
 });
 
-   
-
 
     updateCamera();
     //ticker
@@ -276,10 +306,75 @@ for(var key in json)
 var showDialog = false;
 
 var TopDialogBackground;
+
+
+
+var OptionBackground;
+var OptionSelected;
+var OptionTextArray;
+var OptionCount;
+var OptionIndex;
+
 var TopDialogText;
 var EnterHint;
 
 var TalkCheck = [];
+
+
+var isOption = false;
+
+function showOption()
+{
+    OptionCount = EnterEvent.NPCData.option.length;
+
+    isOption = true;
+    OptionIndex = 0;
+    OptionSelected.x = OptionTextArray[0].x-7;
+    OptionSelected.y = OptionTextArray[0].y-7;
+
+    createjs.Tween.get(OptionBackground,{loop:false}).wait(200).to({alpha:0.5},300,createjs.Ease.quadInOut);
+
+    for(var i =0; i<OptionCount;i++)
+    {
+         createjs.Tween.get(OptionTextArray[i],{loop:false}).wait(200+200*i).to({alpha:1},300,createjs.Ease.quadInOut);
+    }
+
+    createjs.Tween.get(OptionSelected,{loop:false}).wait(200).to({alpha:0.7},300,createjs.Ease.quadInOut);
+
+
+}
+
+function closeOption()
+{
+    OptionCount = EnterEvent.NPCData.option.length;
+
+    isOption = false;
+
+    createjs.Tween.get(OptionBackground,{loop:false}).wait(200).to({alpha:0},300,createjs.Ease.quadInOut);
+
+    for(var i =0; i<OptionCount;i++)
+    {
+         createjs.Tween.get(OptionTextArray[i],{loop:false}).to({alpha:0},300,createjs.Ease.quadInOut);
+    }
+
+    createjs.Tween.get(OptionSelected,{loop:false}).wait(200).to({alpha:0},300,createjs.Ease.quadInOut);
+}
+
+function changeOption(nextOrPrevious)
+{
+    console.log(nextOrPrevious);
+    if(nextOrPrevious)
+    {
+        OptionIndex=(OptionIndex+1)%OptionCount;
+    }
+    else
+    {
+        OptionIndex=(OptionIndex-1)%OptionCount;
+        if(OptionIndex<0)OptionIndex+=OptionCount;
+    }
+
+    createjs.Tween.get(OptionSelected,{loop:false}).to({x:OptionTextArray[OptionIndex].x-7,y:OptionTextArray[OptionIndex].y-7},100,createjs.Ease.quadInOut);
+}
 
 function initNPCByData(data)
 {
@@ -331,7 +426,7 @@ function switchDialog(target)
         createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
         TopDialogText.text = EnterEvent.NPCData.dialogText;
         createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
-        
+        showOption();
     }
     else
     {
@@ -339,6 +434,7 @@ function switchDialog(target)
        createjs.Tween.get(EnterEvent.NPCData.bigPic,{loop:false}).to({alpha:0},300,createjs.Ease.quadInOut);
        createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
        createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
+       closeOption();
        
     }
 
@@ -951,6 +1047,35 @@ function handleKeyDown(event){
      if(dialogTextInput.is(":focus"))
         {
             return;
+        }
+
+        if(isOption)
+        {
+             switch(event.keyCode)
+             {
+
+
+            case KEYCODE_UP:
+                changeOption(false);
+
+                break;
+            case KEYCODE_DOWN:
+            changeOption(true);
+
+                break;
+            case KEYCODE_LEFT:
+            changeOption(false);
+
+                break;
+            case KEYCODE_RIGHT:
+            changeOption(true);
+
+                break;
+            case KEYCODE_SPACE:
+            case KEYCODE_ENTER:
+                 break;
+
+            }
         }
 
     if(!showDialog)
