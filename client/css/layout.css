@@ -31,6 +31,11 @@ body {
 	color:#00ff00;
 }
 
+#addMap{
+
+}
+
+
 .ChangeCharacter{
 	position: relative;
 	top: -510px;
@@ -53,7 +58,7 @@ body {
 	width:300px;
 	height:200px;
 	position: relative;
-	top: -100px;
-	left: 0px;
+	top: -260px;
+	left: 380px;
 }
 
