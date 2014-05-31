@@ -1,0 +1,77 @@
+[
+{
+    "x":650,
+    "y":570,
+    "animation":
+    {
+        "animations":{
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["policeA.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":30,
+                    "regX": 15,
+                    "regY": 16,
+                    "count": 12
+                }
+    }
+    ,
+    "pic":"fang.png",
+    "picX":0,
+    "picY":100,
+    "dialogText":"我是超越憲法的男人",
+    "option":[
+        {"talk":"選項1","reponse":"回答1"},
+        {"talk":"選項2","reponse":"回答2"},
+        {"talk":"選項2","reponse":"回答2"},
+        {"talk":"選項2","reponse":"回答2"}
+        ]
+    },
+
+    {
+    "x":990,
+    "y":1300,
+    "animation":
+    {
+        "animations":{
+            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
+            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
+            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
+            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
+            "down_idle":1,
+            "left_idle":4,
+            "right_idle":7,
+            "up_idle":10
+            },
+            "images": ["policeA.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":30,
+                    "regX": 15,
+                    "regY": 16,
+                    "count": 12
+                }
+    }
+    ,
+    "pic":"fang.png",
+    "picX":0,
+    "picY":100,
+    "dialogText":"我是超越憲法的男人二號",
+    "option":[
+        {"talk":"選項1","reponse":"回答1"},
+        {"talk":"選項2","reponse":"回答2"},
+        {"talk":"選項2","reponse":"回答2"},
+        {"talk":"選項2","reponse":"回答2"}
+        ]
+    }
+]

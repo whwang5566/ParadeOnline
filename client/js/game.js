@@ -34,7 +34,6 @@ var player10SpriteSheet;
 var player11SpriteSheet;
 var player12SpriteSheet;
 
-var policeSpriteSheet;
 
 
 
@@ -174,13 +173,6 @@ TMXMapLoader.loadJSON("map.json",true,function(layer)
     initPlayerSpriteSheet();
    
 
-    police = new createjs.Sprite(policeSpriteSheet);
-    police.x = 650;
-    police.y = 570;
-    police.scaleX = 1;
-    police.scaleY = 1;
-    police.gotoAndPlay("down_idle");
-    PlayerContainer.addChild(police);
 
 
 
@@ -219,12 +211,7 @@ TMXMapLoader.loadJSON("map.json",true,function(layer)
 
 
 
-  fang = new createjs.Bitmap("fang.png"); 
-  fang.scaleX=1;
-  fang.scaleY=1;
-  fang.x = 0;
-  fang.y = 100;
-  fang.alpha = 0;
+
 
   TopDialogBackground  = new createjs.Shape();
   TopDialogBackground.color = "#FFFFFF";
@@ -249,18 +236,37 @@ TMXMapLoader.loadJSON("map.json",true,function(layer)
   EnterHint.y = 150;
   EnterHint.alpha = 0;
 
-  police.DialogPic = fang;
-  police.DialogText = "我是超越憲法的男人！";
 
 
-   
+
+
+
+
+//for
+ 
+
    UIContainer.addChild(EnterHint);
    UIContainer.addChild(TopDialogBackground);
    UIContainer.addChild(TopDialogText);
-   UIContainer.addChild(fang);
-  
 
+
+$.getJSON("NPCS.json", function(json)
+{
+
+
+for(var key in json)
+{
+    var data = json[key];
+    initNPCByData(data);
+}
     
+
+
+});
+
+   
+
+
     updateCamera();
     //ticker
     createjs.Ticker.addEventListener("tick", handleTick);
@@ -268,11 +274,40 @@ TMXMapLoader.loadJSON("map.json",true,function(layer)
 }   
 
 var showDialog = false;
-var fang;
+
 var TopDialogBackground;
 var TopDialogText;
 var EnterHint;
 
+var TalkCheck = [];
+
+function initNPCByData(data)
+{
+        data.SpriteSheet = new createjs.SpriteSheet(data.animation);
+ 
+        var bigPic = new createjs.Bitmap(data.pic); 
+        bigPic.scaleX=1;
+        bigPic.scaleY=1;
+        bigPic.x = data.picX;
+        bigPic.y = data.picY;
+        bigPic.alpha = 0;
+
+        data.bigPic = bigPic;
+
+        var avator = new createjs.Sprite(data.SpriteSheet);
+        avator.x = data.x;
+        avator.y = data.y;
+        avator.scaleX = 1;
+        avator.scaleY = 1;
+        avator.gotoAndPlay("down_idle");
+        avator.NPCData = data;
+
+
+        PlayerContainer.addChild(avator);
+        UIContainer.addChild(bigPic);
+
+        TalkCheck.push(avator);
+}
 
 function userSayEvent()
 {
@@ -287,21 +322,21 @@ function userSayEvent()
     updateTargetPlayerDialog(mainPlayer);
 }
 
-function switchDialog()
+function switchDialog(target)
 {
     if(!showDialog)
     {
         
-        createjs.Tween.get(police.DialogPic,{loop:false}).to({alpha:1},300,createjs.Ease.quadInOut);
+        createjs.Tween.get(EnterEvent.NPCData.bigPic,{loop:false}).to({alpha:1},300,createjs.Ease.quadInOut);
         createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
-        TopDialogText.text = police.DialogText;
+        TopDialogText.text = EnterEvent.NPCData.dialogText;
         createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
         
     }
     else
     {
     
-       createjs.Tween.get(fang,{loop:false}).to({alpha:0},300,createjs.Ease.quadInOut);
+       createjs.Tween.get(EnterEvent.NPCData.bigPic,{loop:false}).to({alpha:0},300,createjs.Ease.quadInOut);
        createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
        createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
        
@@ -313,29 +348,6 @@ function switchDialog()
 
 function initPlayerSpriteSheet()
 {
-
-    policeSpriteSheet = new createjs.SpriteSheet({
-        "animations":{
-            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
-            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
-            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
-            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
-            "down_idle":1,
-            "left_idle":4,
-            "right_idle":7,
-            "up_idle":10
-            },
-            "images": ["policeA.png"],
-            "frames":
-                {
-                    "height": 32,
-                    "width":30,
-                    "regX": 15,
-                    "regY": 16,
-                    "count": 12
-                }
-    }); 
-
      //players
     player1SpriteSheet = new createjs.SpriteSheet({
         "animations":{
@@ -623,9 +635,6 @@ function initDialog(player)
   //mainPlayer.dialog.background =  dialog;
   DialogContainer.addChild(TextBackground);
   DialogContainer.addChild(dialogText);
-
-
-
   
 }
 
@@ -885,19 +894,34 @@ function handleTick() {
 
 
 //show dialog
-   var distance =getDistance(police,mainPlayer);
+
+
+for(var key in TalkCheck)
+{
+    var talk = TalkCheck[key];
+
+    var distance =getDistance(talk,mainPlayer);
 
    if(distance<DialogDistance&&!showEnter&&!showDialog)
    {
         showEnter = true;
-        EnterEvent = police;
+        EnterEvent = talk;
         recheck();
    }
-   else if(distance>=DialogDistance&&showEnter)
+
+}
+
+
+if(EnterEvent!=null)
+{
+    var distance =getDistance(EnterEvent,mainPlayer);
+    if(distance>=DialogDistance&&showEnter)
    {
         showEnter = false;
    }
+}
 
+ 
 
     //update
     updateCamera();
