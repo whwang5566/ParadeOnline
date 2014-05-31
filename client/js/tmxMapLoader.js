@@ -179,7 +179,23 @@ TMXMapLoader.InitLayer = function(layer,isPrerender)
 		var positionX = indexX * tileWidth;
 		var positionY = indexY * tileHeight;
 
-		var cellBitmap = new createjs.Sprite(TMXMapLoader.SpriteSheets[remapIndex.spriteSheetIndex]);
+
+		var targetSpriteSheet = TMXMapLoader.SpriteSheets[remapIndex.spriteSheetIndex];
+		var cellBitmap;
+		if(targetSpriteSheet.cloned)
+		{
+			cellBitmap = targetSpriteSheet.cloneInstance.clone(false);
+
+		}
+		else
+		{
+			cellBitmap = new createjs.Sprite(targetSpriteSheet);
+			targetSpriteSheet.cloned = true;
+			targetSpriteSheet.cloneInstance = cellBitmap;
+					console.log("new");
+		}
+
+	    
 		cellBitmap.gotoAndStop(remapIndex.index);
 
 		cellBitmap.x = positionX;
