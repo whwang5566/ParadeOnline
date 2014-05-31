@@ -30,10 +30,10 @@
     "picY":100,
     "dialogText":"我是超越憲法的男人",
     "option":[
-        {"talk":"選項1","reponse":"回答1"},
-        {"talk":"選項2","reponse":"回答2"},
-        {"talk":"選項2","reponse":"回答2"},
-        {"talk":"選項2","reponse":"回答2"}
+        {"talk":"選項1","response":"回答1"},
+        {"talk":"選項2","response":"回答2"},
+        {"talk":"選項2","response":"回答2"},
+        {"talk":"選項2","response":"回答2"}
         ]
     },
 
@@ -66,12 +66,11 @@
     "pic":"fang.png",
     "picX":0,
     "picY":100,
-    "dialogText":"我是超越憲法的男人二號",
+    "dialogText":"我是超越憲法的男人",
     "option":[
-        {"talk":"選項1","reponse":"回答1"},
-        {"talk":"選項2","reponse":"回答2"},
-        {"talk":"選項2","reponse":"回答2"},
-        {"talk":"選項2","reponse":"回答2"}
+        {"talk":"為什麼要驅離公投盟？","response":"回答1"},
+        {"talk":"選項2","response":"回答2"},
+        {"talk":"選項3","response":"回答3"}
         ]
     }
 ]

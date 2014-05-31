@@ -326,9 +326,11 @@ var isOption = false;
 function showOption()
 {
     OptionCount = EnterEvent.NPCData.option.length;
+    if(OptionCount<=0)return;
 
     isOption = true;
     OptionIndex = 0;
+
     OptionSelected.x = OptionTextArray[0].x-7;
     OptionSelected.y = OptionTextArray[0].y-7;
 
@@ -336,15 +338,15 @@ function showOption()
 
     for(var i =0; i<OptionCount;i++)
     {
-         createjs.Tween.get(OptionTextArray[i],{loop:false}).wait(200+200*i).to({alpha:1},300,createjs.Ease.quadInOut);
+
+       OptionTextArray[i].text=EnterEvent.NPCData.option[i].talk;
+       createjs.Tween.get(OptionTextArray[i],{loop:false}).wait(200+200*i).to({alpha:1},300,createjs.Ease.quadInOut);
     }
 
     createjs.Tween.get(OptionSelected,{loop:false}).wait(200).to({alpha:0.7},300,createjs.Ease.quadInOut);
-
-
 }
 
-function closeOption()
+function closeOption(choose)
 {
     OptionCount = EnterEvent.NPCData.option.length;
 
@@ -358,6 +360,22 @@ function closeOption()
     }
 
     createjs.Tween.get(OptionSelected,{loop:false}).wait(200).to({alpha:0},300,createjs.Ease.quadInOut);
+
+
+if(choose)
+{
+    createjs.Tween.get(TopDialogText).to({alpha:0}, 200).call(handleComplete);
+
+    function handleComplete() {
+        //Tween complete
+        TopDialogText.text = EnterEvent.NPCData.option[OptionIndex].response;
+        createjs.Tween.get(TopDialogText).to({alpha:1}, 200);
+        
+    }
+}
+
+
+
 }
 
 function changeOption(nextOrPrevious)
@@ -434,7 +452,6 @@ function switchDialog(target)
        createjs.Tween.get(EnterEvent.NPCData.bigPic,{loop:false}).to({alpha:0},300,createjs.Ease.quadInOut);
        createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
        createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
-       closeOption();
        
     }
 
@@ -1152,18 +1169,31 @@ function handleKeyUp(event){
         case KEYCODE_ENTER:
             if(showEnter)
             {
+                console.log(1);
                 switchDialog();
                 showEnter = false;
             }
+            else if(isOption)
+            {
+                 console.log(2);
+                closeOption(true);
+            }
             else if(showDialog)
             {
-               switchDialog(); 
+                 console.log(3);
+                 switchDialog(); 
             }
+
             break;
         case KEYCODE_ESC:
             if(showDialog)
             {
                 switchDialog(); 
+            }
+
+            if(isOption)
+            {
+                closeOption(false);
             }
     }
 }
