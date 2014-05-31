@@ -11,6 +11,8 @@ var KEYCODE_RIGHT = 39;     //usefull keycode
 var KEYCODE_DOWN = 40;      //usefull keycode
 var KEYCODE_SPACE = 32;     //usefull keycode
 var KEYCODE_X = 88;
+var KEYCODE_ENTER = 13;
+var KEYCODE_ESC = 27;
 
 //Predefined Variable
 var DialogPaddingX = 10;
@@ -240,12 +242,23 @@ TMXMapLoader.loadJSON("map.json",true,function(layer)
   TopDialogText.y = 330;
   TopDialogText.alpha = 0;
 
+  EnterHint = new createjs.Bitmap("enter.png"); 
+  EnterHint.scaleX=1;
+  EnterHint.scaleY=1;
+  EnterHint.x = 370;
+  EnterHint.y = 150;
+  EnterHint.alpha = 0;
+
+  police.DialogPic = fang;
+  police.DialogText = "我是超越憲法的男人！";
+
+
    
-    
+   UIContainer.addChild(EnterHint);
    UIContainer.addChild(TopDialogBackground);
    UIContainer.addChild(TopDialogText);
    UIContainer.addChild(fang);
-
+  
 
     
     updateCamera();
@@ -258,6 +271,7 @@ var showDialog = false;
 var fang;
 var TopDialogBackground;
 var TopDialogText;
+var EnterHint;
 
 
 function userSayEvent()
@@ -277,15 +291,20 @@ function switchDialog()
 {
     if(!showDialog)
     {
-        createjs.Tween.get(fang,{loop:false}).to({alpha:1},300,createjs.Ease.quadInOut);
+        
+        createjs.Tween.get(police.DialogPic,{loop:false}).to({alpha:1},300,createjs.Ease.quadInOut);
         createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
+        TopDialogText.text = police.DialogText;
         createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
+        
     }
     else
     {
+    
        createjs.Tween.get(fang,{loop:false}).to({alpha:0},300,createjs.Ease.quadInOut);
        createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
        createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:0},700,createjs.Ease.quadInOut);
+       
     }
 
     showDialog = !showDialog;
@@ -581,12 +600,7 @@ function initPlayerSpriteSheet()
                     "count": 12
                 }
     });
-
-
 }
-
-
-
  
 function initDialog(player)
 {
@@ -869,15 +883,19 @@ function handleTick() {
             sendPlayerStateToServer();
         }
 
- var distance =getDistance(police,mainPlayer);
 
-   if(distance<DialogDistance&&!showDialog)
+//show dialog
+   var distance =getDistance(police,mainPlayer);
+
+   if(distance<DialogDistance&&!showEnter&&!showDialog)
    {
-        switchDialog();
+        showEnter = true;
+        EnterEvent = police;
+        recheck();
    }
-   else if(distance>=DialogDistance&&showDialog)
+   else if(distance>=DialogDistance&&showEnter)
    {
-        switchDialog();
+        showEnter = false;
    }
 
 
@@ -885,7 +903,17 @@ function handleTick() {
     updateCamera();
     updateTargetPlayerDialog(mainPlayer);
     stage.update(); 
-}     
+}   
+
+ var showEnter = false;
+ var EnterEvent;
+
+  function recheck() 
+  {
+            if(showEnter)
+                createjs.Tween.get(EnterHint).to({alpha:1}, 500).to({alpha:0}, 500).call(recheck);
+
+  }  
 
 var backgroundSound;
 
@@ -900,6 +928,9 @@ function handleKeyDown(event){
         {
             return;
         }
+
+    if(!showDialog)
+    {
     switch(event.keyCode){
 /*
         case KEYCODE_X:
@@ -946,9 +977,16 @@ function handleKeyDown(event){
             sendPlayerInstructionToServer('keySpace');
             break;
     }
+    }
 }
 
 function handleKeyUp(event){
+
+    
+     if(dialogTextInput.is(":focus"))
+        {
+            return;
+        }
     switch(event.keyCode){
         case KEYCODE_UP:
             moveUp = false
@@ -962,6 +1000,22 @@ function handleKeyUp(event){
         case KEYCODE_RIGHT:
             moveRight = false;
             break;
+        case KEYCODE_ENTER:
+            if(showEnter)
+            {
+                switchDialog();
+                showEnter = false;
+            }
+            else if(showDialog)
+            {
+               switchDialog(); 
+            }
+            break;
+        case KEYCODE_ESC:
+            if(showDialog)
+            {
+                switchDialog(); 
+            }
     }
 }
 
@@ -1004,8 +1058,8 @@ function removePlayer(id){
         
         PlayerContainer.removeChild(player);
 
-            DialogContainer.removeChild(dialogText);
-    DialogContainer.removeChild(TextBackground);
+        DialogContainer.removeChild(dialogText);
+        DialogContainer.removeChild(TextBackground);
         delete playersList[id];
     }
 }
