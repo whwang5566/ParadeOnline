@@ -1,5 +1,20 @@
+// (function(){
+var addMap = $('#addMap'),
+    map = $('#map');
+var temp = 0;
+addMap.click(function(){
+    console.log('addMap');
+    if (temp %2==0)
+        map.hide();
+    else
+        map.show();
+    temp++;
+    // $(inputMap).prependTo().addClass('is-editing').find('input').focus();
+});
 
-// var tmpl = '<li><input type="text"><span></span></li>',
+
+// }());
+
 
 function clickMute(){
 
@@ -18,6 +33,11 @@ function clickMute(){
             
     
 }
+
+function clickMap(){
+    console.log("clickMap");
+}
+
 
 function IgnoreAlpha(e)
 {

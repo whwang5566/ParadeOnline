@@ -7,6 +7,7 @@
     <!-- Bootstrap -->
     <link href="../bootstrap-3.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="layout.css" rel="stylesheet">
+    <link href="jquery-ui.css" rel="stylesheet">
 
     <meta charset="UTF-8">
     <title>遊行Online</title>
@@ -19,11 +20,13 @@
 
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type="text/javascript" src="jquery-ui.min.js"></script>
+    <script type="text/javascript" src="jquery.min.js"></script>
     <script type="text/javascript" src="../bootstrap-3.1.1/dist/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="tmxMapLoader.js"></script>
     <script type="text/javascript" src="game.js"></script>
-    <script type="text/javascript" src="layout.js"></script>
+    
 
      <script type="text/javascript"
       src="http://maps.googleapis.com/maps/api/js?sensor=false">
@@ -73,6 +76,11 @@
             <option value="12">白狼</option>
         </select>
     
+    <div style="position:relative; top:-530px; left:130px;" id="addMap">
+        <button type="button"   style="border:1px ; solid:#666666; 
+ background-color: transparent"><img src="callMap.png" id="" width="20" height="20"></button>
+    </div>
+
     <!-- <div class="btn-group ChangeCharacter" name="playerSelection" onchange="changePlayer(mainPlayer,this.options[this.selectedIndex].value,true)">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" onclick="clickChangeCharacter();">
       Player 1
@@ -100,10 +108,12 @@
         
        
         <!-- <div class="col-sm-3"></div> -->
-   
-  </div>
+    
 
     <div id="map" class="map center-block img-rounded"></div>
+
+    <script type="text/javascript" src="layout.js"></script>
+  </div>
 
 </body>
 
