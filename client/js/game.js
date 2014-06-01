@@ -68,6 +68,8 @@ var dialogText;
 
 var PlayerContainer;
 var DialogContainer;
+var UIBackContainer;
+
 var UIContainer;
 var DialogDistance = 20;
 var isCompositioned = false;
@@ -140,6 +142,7 @@ panorama.setPosition(yuan);
     PlayerContainer= new createjs.Container(); 
     DialogContainer= new createjs.Container(); 
     UIContainer = new createjs.Container(); 
+     UIBackContainer = new createjs.Container(); 
     
 
 TMXMapLoader.loadJSON("map.json",true,function(layer)
@@ -157,6 +160,8 @@ TMXMapLoader.loadJSON("map.json",true,function(layer)
 
 
     stage.addChild(DialogContainer);
+   
+    stage.addChild(UIBackContainer);
     stage.addChild(UIContainer);
         // console.log(layer);
         TMXMapLoader.CreateCollisionMapByLayer(['Building','Object']);
@@ -180,7 +185,7 @@ TMXMapLoader.loadJSON("map.json",true,function(layer)
     mainPlayer = new createjs.Sprite(player1SpriteSheet);
     mainPlayer.playerSprite = defaultPlayerSprite;
 
-    PlayerContainer.addChild(mainPlayer);
+    
     
     //position
     mainPlayer.x = 990;
@@ -292,6 +297,7 @@ for(var key in json)
     initNPCByData(data);
 }
     
+    PlayerContainer.addChild(mainPlayer);
 
 
 });
@@ -334,16 +340,16 @@ function showOption()
     OptionSelected.x = OptionTextArray[0].x-7;
     OptionSelected.y = OptionTextArray[0].y-7;
 
-    createjs.Tween.get(OptionBackground,{loop:false}).wait(200).to({alpha:0.5},300,createjs.Ease.quadInOut);
+    createjs.Tween.get(OptionBackground,{loop:false}).wait(1000).to({alpha:0.5},300,createjs.Ease.quadInOut);
 
     for(var i =0; i<OptionCount;i++)
     {
 
        OptionTextArray[i].text=EnterEvent.NPCData.option[i].talk;
-       createjs.Tween.get(OptionTextArray[i],{loop:false}).wait(200+200*i).to({alpha:1},300,createjs.Ease.quadInOut);
+       createjs.Tween.get(OptionTextArray[i],{loop:false}).wait(1000+200*i).to({alpha:1},300,createjs.Ease.quadInOut);
     }
 
-    createjs.Tween.get(OptionSelected,{loop:false}).wait(200).to({alpha:0.7},300,createjs.Ease.quadInOut);
+    createjs.Tween.get(OptionSelected,{loop:false}).wait(1000).to({alpha:0.7},300,createjs.Ease.quadInOut);
 }
 
 function closeOption(choose)
@@ -396,9 +402,14 @@ function changeOption(nextOrPrevious)
 
 function initNPCByData(data)
 {
+
+     var avator;
+     var bigPic;
+        if(data.visible)
+        {
         data.SpriteSheet = new createjs.SpriteSheet(data.animation);
  
-        var bigPic = new createjs.Bitmap(data.pic); 
+        bigPic = new createjs.Bitmap(data.pic); 
         bigPic.scaleX=1;
         bigPic.scaleY=1;
         bigPic.x = data.picX;
@@ -407,7 +418,7 @@ function initNPCByData(data)
 
         data.bigPic = bigPic;
 
-        var avator = new createjs.Sprite(data.SpriteSheet);
+        avator = new createjs.Sprite(data.SpriteSheet);
         avator.x = data.x;
         avator.y = data.y;
         avator.scaleX = 1;
@@ -417,7 +428,40 @@ function initNPCByData(data)
 
 
         PlayerContainer.addChild(avator);
+
+        }
+        else
+        {
+
+ 
+        bigPic = new createjs.Bitmap(data.pic); 
+        bigPic.scaleX=1;
+        bigPic.scaleY=1;
+        bigPic.x = data.picX;
+        bigPic.y = data.picY;
+        bigPic.alpha = 0;
+
+        data.bigPic = bigPic;
+
+        avator = {};
+        avator.x = data.x;
+        avator.y = data.y;
+        avator.scaleX = 1;
+        avator.scaleY = 1;
+        avator.NPCData = data;   
+        }
+
+        if(data.back)
+        {
+            UIBackContainer.addChild(bigPic);
+        }
+        else
+        {
         UIContainer.addChild(bigPic);
+         }   
+
+         bigPic.scaleX = data.scale;
+          bigPic.scaleY = data.scale;
 
         TalkCheck.push(avator);
 }
@@ -440,8 +484,19 @@ function switchDialog(target)
     if(!showDialog)
     {
         
+        if(EnterEvent.NPCData.back)
+        {
+            TopDialogText.x = 40;
+            TopDialogText.y = 330;
+        }
+        else
+        {
+            TopDialogText.x = 270;
+            TopDialogText.y = 330;
+        }
+
         createjs.Tween.get(EnterEvent.NPCData.bigPic,{loop:false}).to({alpha:1},300,createjs.Ease.quadInOut);
-        createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
+        createjs.Tween.get(TopDialogBackground,{loop:false}).to({alpha:0.7},700,createjs.Ease.quadInOut);
         TopDialogText.text = EnterEvent.NPCData.dialogText;
         createjs.Tween.get(TopDialogText,{loop:false}).to({alpha:1},700,createjs.Ease.quadInOut);
         showOption();
@@ -788,8 +843,8 @@ function updateCamera()
     if(stage.x<-(bgWidth-canvas.width))stage.x = -(bgWidth-canvas.width);
     if(stage.y<-(bgHeight-canvas.height))stage. y= -(bgHeight-canvas.height);
 
-    UIContainer.x = - stage.x;
-    UIContainer.y = - stage.y;
+    UIBackContainer.x = UIContainer.x = - stage.x;
+    UIBackContainer.y = UIContainer.y = - stage.y;
 }
 
 //init enemy
@@ -1167,20 +1222,18 @@ function handleKeyUp(event){
             moveRight = false;
             break;
         case KEYCODE_ENTER:
+        case KEYCODE_SPACE:
             if(showEnter)
             {
-                console.log(1);
                 switchDialog();
                 showEnter = false;
             }
-            else if(isOption)
+            else if(isOption&&OptionTextArray[OptionCount-1].alpha>=0.9)
             {
-                 console.log(2);
                 closeOption(true);
             }
-            else if(showDialog)
+            else if(showDialog&&!isOption)
             {
-                 console.log(3);
                  switchDialog(); 
             }
 

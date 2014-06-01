@@ -1,18 +1,11 @@
 [
 {
-    "x":650,
-    "y":570,
+    "x":906,
+    "y":1225,
     "animation":
     {
         "animations":{
-            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
-            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
-            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
-            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
-            "down_idle":1,
-            "left_idle":4,
-            "right_idle":7,
-            "up_idle":10
+            "down_idle":1
             },
             "images": ["policeA.png"],
             "frames":
@@ -26,51 +19,130 @@
     }
     ,
     "pic":"fang.png",
+    "back":false,
     "picX":0,
     "picY":100,
-    "dialogText":"我是超越憲法的男人",
+    "scale":1,
+    "visible":true,
+    "dialogText":"我是超越憲法的男人。",
     "option":[
         {"talk":"選項1","response":"回答1"},
         {"talk":"選項2","response":"回答2"},
-        {"talk":"選項2","response":"回答2"},
+        {"talk":"選項3","response":"回答3"},
+        {"talk":"選項4","response":"回答4"}
+        ]
+    },
+
+    {
+    "x":1329,
+    "y":1105,
+    "animation":
+    {
+        "animations":{
+            "down_idle": 1
+            },
+            "images": ["ma.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":24,
+                    "regX": 12,
+                    "regY": 16,
+                    "count": 3
+                }
+    }
+    ,
+    "pic":"bigMa.png",
+    "back":true,
+    "picX":-130,
+    "picY":100,
+    "scale":2,
+    "visible":true,
+    "dialogText":"我是馬英九！",
+    "option":[
+        {"talk":"一個便當吃不飽。","response":"那你有買兩個嘛？"},
+        {"talk":"選項2","response":"回答2"}
+        ]
+    },
+        {
+    "x":929,
+    "y":1105,
+    "animation":
+    {
+        "animations":{
+            "down_idle": 1
+            },
+            "images": ["chen.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":24,
+                    "regX": 12,
+                    "regY": 16,
+                    "count": 3
+                }
+    }
+    ,
+    "pic":"bigChen.png",
+    "back":false,
+    "picX":-180,
+    "picY":100,
+    "scale":1,
+    "visible":true,
+    "dialogText":"你有看到我的小熊嘛？",
+    "option":[
+        {"talk":"有看到！","response":">////<"},
+        {"talk":"沒看到！","response":"^ 口 ^"}
+        ]
+    },
+
+        {
+    "x":1029,
+    "y":1155,
+    "animation":
+    {
+        "animations":{
+            "down_idle": 1
+            },
+            "images": ["fly.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":23,
+                    "regX": 12,
+                    "regY": 16,
+                    "count": 3
+                }
+    }
+    ,
+    "pic":"bigFly.png",
+    "back":false,
+    "picX":-70,
+    "picY":50,
+    "scale":1.2,
+    "visible":true,
+    "dialogText":"        先立法！後審查！",
+    "option":[
+        {"talk":"選項1","response":"回答1"},
         {"talk":"選項2","response":"回答2"}
         ]
     },
 
     {
-    "x":990,
-    "y":1300,
-    "animation":
-    {
-        "animations":{
-            "down_walk": {"frames":[0,1,2,1],"speed":0.1},
-            "left_walk": {"frames":[3,4,5,4],"speed":0.1},
-            "right_walk": {"frames":[6,7,8,7],"speed":0.1},
-            "up_walk":{"frames":[9,10,11,10],"speed":0.1},
-            "down_idle":1,
-            "left_idle":4,
-            "right_idle":7,
-            "up_idle":10
-            },
-            "images": ["policeA.png"],
-            "frames":
-                {
-                    "height": 32,
-                    "width":30,
-                    "regX": 15,
-                    "regY": 16,
-                    "count": 12
-                }
-    }
-    ,
-    "pic":"fang.png",
-    "picX":0,
-    "picY":100,
-    "dialogText":"我是超越憲法的男人",
+    "x":1029,
+    "y":1057,
+    "visible":false,
+    "back":true,
+    "pic":"sunflower.png",
+    "picX":-30,
+    "picY":-100,
+    "scale":1.7,
+    "dialogText":"你知道太陽花學運嘛？",
     "option":[
-        {"talk":"為什麼要驅離公投盟？","response":"回答1"},
-        {"talk":"選項2","response":"回答2"},
-        {"talk":"選項3","response":"回答3"}
+        {"talk":"太陽花學運是什麼？","response":"是指2014年3月18日起臺灣的大學學生和公民們共同發\n起佔領中華民國立法院所引起的社會運動事件。"},
+        {"talk":"太陽花學運的訴求是？","response":"1.將服貿協議退回行政院。\n2.建立兩岸協議的監督機制。\n3.召開公民憲政會議。\n4.立委應傾聽民意，不要只聽黨意。"},
+        {"talk":"兩岸協議的監督機制？","response":"兩岸協議的監督機制應符合五大原則：公民能參與、\n人權有保障、資訊要公開、政府負義務、國會要監督\n。"},
+        {"talk":"主要學生領導人？","response":"主要學生領導人為黑色島國青年陣線成員，包括國立\n臺灣大學政治研究所研究生林飛帆，國立清華大學社\n會研究所研究生陳為廷、魏揚、世新大學社發所研究\n生陳廷豪等人。"}
         ]
     }
 ]
