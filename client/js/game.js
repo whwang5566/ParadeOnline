@@ -1050,12 +1050,19 @@ function handleTick() {
         else mainPlayer.stop();
     }
 
+if(MapUpdateCoolDown>0)MapUpdateCoolDown--;
+
     //send to server
     if(needSync)
         { 
 
     var newView = interpret(mainPlayer.x,mainPlayer.y,positionPoints);
+    
+if(MapUpdateCoolDown<=0)
+{
+    MapUpdateCoolDown = 30;
     panorama.setPosition(new google.maps.LatLng(newView.x,newView.y));
+}
 
             sendPlayerStateToServer();
         }
@@ -1099,6 +1106,7 @@ if(EnterEvent!=null)
 
  var showEnter = false;
  var EnterEvent;
+ var MapUpdateCoolDown = 0;
 
   function recheck() 
   {
