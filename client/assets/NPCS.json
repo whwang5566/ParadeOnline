@@ -149,7 +149,7 @@
 
         {
     "x":1661,
-    "y":922,
+    "y":942,
     "animation":
     {
         "animations":{
@@ -206,6 +206,68 @@
     "option":[
         {"talk":"正元臉書上的風景照好漂亮歐","response":"        我沒有盜圖歐"},
         {"talk":"暴民擋在立委車前面真不應該","response":"        對呀！有警察在車上怎麼會犯法。"}
+        ]
+    },
+    {
+    "x":684,
+    "y":1330,
+    "animation":
+    {
+        "animations":{
+            "down_idle": 1
+            },
+            "images": ["tsaiZY.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":23,
+                    "regX": 12,
+                    "regY": 16,
+                    "count": 3
+                }
+    }
+    ,
+    "pic":"bigFly.png",
+    "back":false,
+    "picX":-70,
+    "picY":50,
+    "scale":1.2,
+    "visible":true,
+    "dialogText":"        你好我是中天記者，請問接受我\n        們最專業的採訪嘛？",
+    "option":[
+        {"talk":"中天新聞龍捲風涉嫌嘲弄女性你怎麼看？","response":"        中天向來秉持公正客觀報導、公\n        共利益、衝突迴避、多元平衡、\n        報導比例原則，決定是第四權的\n        模範！"},
+        {"talk":"警察鎮壓只讓中天進去採訪耶！","response":"        當然！中天新聞絕對最公正客觀\n        符合政府期待的！"}
+        ]
+    },
+    {
+    "x":1029,
+    "y":478,
+    "animation":
+    {
+        "animations":{
+            "down_idle": 1
+            },
+            "images": ["tsaiZY.png"],
+            "frames":
+                {
+                    "height": 32,
+                    "width":23,
+                    "regX": 12,
+                    "regY": 16,
+                    "count": 3
+                }
+    }
+    ,
+    "pic":"bigFly.png",
+    "back":false,
+    "picX":-70,
+    "picY":50,
+    "scale":1.2,
+    "visible":true,
+    "dialogText":"        金平秉持院長職權\n        ，鄭重向各位報告：在兩岸協議\n        監督條例草案完成立法前，將不\n        召集兩岸服務貿易協議相關黨團\n        協商會議。",
+    "option":[
+        {"talk":"總統與行政院長找你開會耶？","response":"        他們沒弄清楚我的重點"},
+        {"talk":"學運學生真是可惡！","response":"        金平呼籲同學，『帶著理想向前\n        行！』回到自己的崗位，努力充\n        實，發揮你們堅定、溫柔、理性\n        、和平的力量，讓全世界敬重我\n        們民主涵養的深度與廣度！"}
         ]
     }
 ]
