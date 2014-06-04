@@ -483,6 +483,12 @@ function switchDialog(target)
 {
     if(!showDialog)
     {
+        if (temp %2==0)
+        {
+            map.hide();
+            temp++;
+        }
+
         
         if(EnterEvent.NPCData.back)
         {
