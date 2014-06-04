@@ -217,12 +217,12 @@
         "animations":{
             "down_idle": 1
             },
-            "images": ["tsaiZY.png"],
+            "images": ["media.png"],
             "frames":
                 {
                     "height": 32,
-                    "width":23,
-                    "regX": 12,
+                    "width":30,
+                    "regX": 15,
                     "regY": 16,
                     "count": 3
                 }
@@ -246,16 +246,16 @@
     "animation":
     {
         "animations":{
-            "down_idle": 1
+            "down_idle": 0
             },
-            "images": ["tsaiZY.png"],
+            "images": ["ChingPing.png"],
             "frames":
                 {
-                    "height": 32,
-                    "width":23,
-                    "regX": 12,
-                    "regY": 16,
-                    "count": 3
+                    "height": 39,
+                    "width":21,
+                    "regX": 11,
+                    "regY": 20,
+                    "count": 1
                 }
     }
     ,

@@ -117,6 +117,12 @@ TMXMapLoader.IsBlock = function(x,y)
 	var indexX = Math.floor(x/TMXMapLoader.tileWidth);
 	var indexY = Math.floor(y/TMXMapLoader.tileHeight);
 
+	if (indexX<0)return true;
+	if (indexY<0)return true;
+	if (indexX>=TMXMapLoader.origin.width)return true;
+	if (indexY>=TMXMapLoader.origin.height)return true;
+
+
 	return this.CollideArray[indexX][indexY];
 
 }
